@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rotate
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="800"
+    android:fromDegrees="0"
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:repeatCount="infinite"
+    android:toDegrees="360" >
+
+    <set>
+        <objectAnimator
+            android:duration="400"
+            android:propertyName="scaleX"
+            android:valueFrom="1.0"
+            android:valueTo="0.6"
+            android:valueType="floatType" />
+
+        <objectAnimator
+            android:duration="400"
+            android:propertyName="scaleY"
+            android:valueFrom="1.0"
+            android:valueTo="0.6"
+            android:valueType="floatType" />
+
+        <objectAnimator
+            android:duration="400"
+            android:propertyName="alpha"
+            android:valueFrom="1.0"
+            android:valueTo="0.4"
+            android:valueType="floatType" />
+
+        <objectAnimator
+            android:duration="400"
+            android:propertyName="rotation"
+            android:valueFrom="0"
+            android:valueTo="180"
+            android:valueType="floatType" />
+
+        <objectAnimator
+            android:duration="400"
+            android:propertyName="rotation"
+            android:valueFrom="180"
+            android:valueTo="360"
+            android:startOffset="400"
+            android:valueType="floatType" />
+
+        <objectAnimator
+            android:duration="400"
+            android:propertyName="scaleX"
+            android:valueFrom="0.6"
+            android:valueTo="1.0"
+            android:startOffset="400"
+            android:valueType="floatType" />
+
+        <objectAnimator
+            android:duration="400"
+            android:propertyName="scaleY"
+            android:valueFrom="0.6"
+            android:valueTo="1.0"
+            android:startOffset="400"
+            android:valueType="floatType" />
+
+        <objectAnimator
+            android:duration="400"
+            android:propertyName="alpha"
+            android:valueFrom="0.4"
+            android:valueTo="1.0"
+            android:startOffset="400"
+            android:valueType="floatType" />
+    </set>
+
+    <shape
+        android:innerRadiusRatio="3"
+        android:shape="ring"
+        android:thicknessRatio="8"
+        android:useLevel="true" >
+
+        <size
+            android:height="48dp"
+            android:width="48dp" />
+
+        <gradient
+            android:centerColor="#FF3F51B5"
+            android:endColor="#FF3F51B5"
+            android:startColor="#FFCDDC39"
+            android:type="sweep"
+            android:useLevel="false" />
+    </shape>
+</rotate>

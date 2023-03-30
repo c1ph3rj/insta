@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">insta</string>
+    <string name="instagram">Instagram</string>
+    <string name="login_to_continue">Login To Continue:</string>
+    <string name="password">Password</string>
+    <string name="username">UserName</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an Account? <b>Sign Up</b></string>
+    <string name="src">src</string>
+    <string name="login_in_with">Login In With</string>
+    <string name="or">Or</string>
+</resources>
