@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "433538863198-jsenmn63dqu5vdqn9fml6tnvqf7tj4da.apps.googleusercontent.com",
+          "client_id": "433538863198-6j5tukbsmls87juoop85rn71vl3on53s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.c1ph3rj.insta",
-            "certificate_hash": "e63b3aa44ae272f0fd281dcb502e71b266a05804"
+            "certificate_hash": "bed278fc2099c565434434af785bf6c05167ff2f"
           }
         },
         {
