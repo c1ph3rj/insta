@@ -8,6 +8,15 @@ public class User {
     private String EmailId;
     private String Uuid;
     private String PhoneNumber;
+    private boolean isNewUser;
+
+    public boolean isNewUser() {
+        return isNewUser;
+    }
+
+    public void setNewUser(boolean newUser) {
+        isNewUser = newUser;
+    }
 
     public String getUserName() {
         return UserName;

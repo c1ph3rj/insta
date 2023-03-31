@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -23,21 +22,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class LoginScreen extends AppCompatActivity {
@@ -52,6 +48,7 @@ public class LoginScreen extends AppCompatActivity {
     GoogleSignInOptions gso;
     FirebaseFirestore fireStoreDb;
     GoogleSignInClient mGoogleSignInClient;
+    boolean isNewUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +131,6 @@ public class LoginScreen extends AppCompatActivity {
         try {
             firebaseAuth.signOut();
             mGoogleSignInClient.signOut();
-            mGoogleSignInClient.revokeAccess();
             Intent signInWithGoogleIntent = mGoogleSignInClient.getSignInIntent();
             getResult.launch(signInWithGoogleIntent);
         } catch (Exception e) {
@@ -157,6 +153,9 @@ public class LoginScreen extends AppCompatActivity {
                         firebaseAuth.signInWithCredential(userCredentials)
                                 .addOnCompleteListener(firebaseSignIn -> {
                                     if (firebaseSignIn.isSuccessful()) {
+                                        AdditionalUserInfo additionalUserInfo = firebaseSignIn.getResult().getAdditionalUserInfo();
+                                        assert additionalUserInfo != null;
+                                        isNewUser = additionalUserInfo.isNewUser();
                                         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                                         saveUserDataToTheDb(currentUser);
                                     } else {
@@ -174,25 +173,26 @@ public class LoginScreen extends AppCompatActivity {
             });
 
     private void saveUserDataToTheDb(FirebaseUser currentUser) {
-        try{
+        try {
             User userModel = new User();
             userModel.setUserName(currentUser.getDisplayName());
             userModel.setEmailId(currentUser.getEmail());
-            userModel.setPhoneNumber((currentUser.getPhoneNumber() == null)? "-": currentUser.getPhoneNumber());
+            userModel.setPhoneNumber((currentUser.getPhoneNumber() == null) ? "-" : currentUser.getPhoneNumber());
             userModel.setUuid(currentUser.getUid());
             userModel.setProfilePic(currentUser.getPhotoUrl());
+            userModel.setNewUser(isNewUser);
             fireStoreDb.collection("Users")
                     .document(currentUser.getUid())
                     .set(userModel)
                     .addOnCompleteListener(task -> {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             displayToast("Successfully added", LoginScreen.this);
-                        }else{
+                        } else {
                             displayToast("Failed", LoginScreen.this);
                             Objects.requireNonNull(task.getException()).printStackTrace();
                         }
                     });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -202,6 +202,9 @@ public class LoginScreen extends AppCompatActivity {
             firebaseAuth.signInWithEmailAndPassword(userName, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
+                            AdditionalUserInfo additionalUserInfo = task.getResult().getAdditionalUserInfo();
+                            assert additionalUserInfo != null;
+                            isNewUser = additionalUserInfo.isNewUser();
                             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                             saveUserDataToTheDb(currentUser);
                         } else {
