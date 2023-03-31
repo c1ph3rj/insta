@@ -1,44 +1,43 @@
 package com.c1ph3rj.insta.loginPkg;
 
+import static com.c1ph3rj.insta.MainActivity.displayToast;
+
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.c1ph3rj.insta.R;
+import com.c1ph3rj.insta.common.model.User;
 import com.c1ph3rj.insta.databinding.ActivityLoginScreenBinding;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class LoginScreen extends AppCompatActivity {
@@ -51,7 +50,9 @@ public class LoginScreen extends AppCompatActivity {
     ProgressBar loginProgress;
     FirebaseAuth firebaseAuth;
     GoogleSignInOptions gso;
+    FirebaseFirestore fireStoreDb;
     GoogleSignInClient mGoogleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,10 +77,11 @@ public class LoginScreen extends AppCompatActivity {
             passwordField = loginScreenBinding.passwordField;
             firebaseAuth = FirebaseAuth.getInstance();
             gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken("433538863198-6j5tukbsmls87juoop85rn71vl3on53s.apps.googleusercontent.com")
+                    .requestIdToken(getString(R.string.web_client_id))
                     .requestEmail()
                     .build();
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            fireStoreDb = FirebaseFirestore.getInstance();
 
             loginBtn.setOnClickListener(onClickLoginBtn -> {
                 try {
@@ -135,7 +137,7 @@ public class LoginScreen extends AppCompatActivity {
             mGoogleSignInClient.revokeAccess();
             Intent signInWithGoogleIntent = mGoogleSignInClient.getSignInIntent();
             getResult.launch(signInWithGoogleIntent);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -144,70 +146,75 @@ public class LoginScreen extends AppCompatActivity {
     public ActivityResultLauncher<Intent> getResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                loginProgress.setVisibility(View.GONE);
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                    GoogleSignInAccount userAccount = task.getResult();
-                    if(userAccount.getIdToken() != null){
+                    GoogleSignInAccount userAccount;
+                    userAccount = task.getResult();
+                    if (userAccount.getIdToken() != null) {
                         Toast.makeText(this, " to Login.", Toast.LENGTH_SHORT).show();
-
-                        AuthCredential userCredentials = GoogleAuthProvider.getCredential(userAccount.getIdToken(),null);
+                        AuthCredential userCredentials = GoogleAuthProvider.getCredential(userAccount.getIdToken(), null);
                         firebaseAuth.signInWithCredential(userCredentials)
-                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if(task.isSuccessful()){
-                                            Toast.makeText(LoginScreen.this, Objects.requireNonNull(firebaseAuth.getCurrentUser()).getDisplayName() + " ", Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            Toast.makeText(LoginScreen.this, "Failed", Toast.LENGTH_SHORT).show();
-                                        }
+                                .addOnCompleteListener(firebaseSignIn -> {
+                                    if (firebaseSignIn.isSuccessful()) {
+                                        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                                        saveUserDataToTheDb(currentUser);
+                                    } else {
+                                        Toast.makeText(LoginScreen.this, "Failed", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .addOnFailureListener(Throwable::printStackTrace);
-                    }else {
-                        Toast.makeText(this, "Failed to Login.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        displayToast("Something went wrong!", this);
                     }
-                }else{
-                    Intent data = result.getData();
-                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                    if(task.isCanceled()){
-                        task.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                e.printStackTrace();
-                            }
-                        }).addOnCanceledListener(new OnCanceledListener() {
-                            @Override
-                            public void onCanceled() {
-                                task.getException().printStackTrace();
-                            }
-                        });
-                    }else if(task.isSuccessful()){
-                        task.getException().printStackTrace();
-                    }else  if(task.isComplete()){
-                        task.getException().printStackTrace();
-                    }
+                } else {
+                    displayToast("Something went wrong!", this);
                 }
+                loginProgress.setVisibility(View.GONE);
             });
+
+    private void saveUserDataToTheDb(FirebaseUser currentUser) {
+        try{
+            User userModel = new User();
+            userModel.setUserName(currentUser.getDisplayName());
+            userModel.setEmailId(currentUser.getEmail());
+            userModel.setPhoneNumber((currentUser.getPhoneNumber() == null)? "-": currentUser.getPhoneNumber());
+            userModel.setUuid(currentUser.getUid());
+            userModel.setProfilePic(currentUser.getPhotoUrl());
+            fireStoreDb.collection("Users")
+                    .document(currentUser.getUid())
+                    .set(userModel)
+                    .addOnCompleteListener(task -> {
+                        if(task.isSuccessful()){
+                            displayToast("Successfully added", LoginScreen.this);
+                        }else{
+                            displayToast("Failed", LoginScreen.this);
+                            Objects.requireNonNull(task.getException()).printStackTrace();
+                        }
+                    });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private void signInWithEmail(String userName, String password) {
         try {
             firebaseAuth.signInWithEmailAndPassword(userName, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(this, "Logged In.", Toast.LENGTH_SHORT).show();
+                            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                            saveUserDataToTheDb(currentUser);
                         } else {
-
                             String errorCode = ((FirebaseAuthException) Objects.requireNonNull(task.getException())).getErrorCode();
 
                             switch (errorCode) {
 
                                 case "ERROR_INVALID_CUSTOM_TOKEN":
-                                    Toast.makeText(LoginScreen.this, "The custom token format is incorrect. Please check the documentation.", Toast.LENGTH_LONG).show();
+                                    displayToast("The custom token format is incorrect. Please check the documentation.", this);
                                     break;
 
                                 case "ERROR_CUSTOM_TOKEN_MISMATCH":
-                                    Toast.makeText(LoginScreen.this, "The custom token corresponds to a different audience.", Toast.LENGTH_LONG).show();
+                                    displayToast("The custom token corresponds to a different audience.", this);
                                     break;
 
                                 case "ERROR_INVALID_CREDENTIAL":

@@ -22,6 +22,51 @@
           }
         },
         {
+          "client_id": "433538863198-r5pc5q23kkpfrmn7jfggoq4dr6ecp59h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.c1ph3rj.insta",
+            "certificate_hash": "e63b3aa44ae272f0fd281dcb502e71b266a05804"
+          }
+        },
+        {
+          "client_id": "433538863198-0ltedjvgclluhhsogbjfih9fvp9g2f3e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3gFai5vdr6HoX4boE3rxWKnBqXcKVo-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "433538863198-0ltedjvgclluhhsogbjfih9fvp9g2f3e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433538863198:android:3cd91fa64f759749b464cf",
+        "android_client_info": {
+          "package_name": "com.c1ph3rj.myinsta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "433538863198-tog93e73c81qh5u2rnf5afmrnu31v592.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.c1ph3rj.myinsta",
+            "certificate_hash": "bed278fc2099c565434434af785bf6c05167ff2f"
+          }
+        },
+        {
           "client_id": "433538863198-0ltedjvgclluhhsogbjfih9fvp9g2f3e.apps.googleusercontent.com",
           "client_type": 3
         }
