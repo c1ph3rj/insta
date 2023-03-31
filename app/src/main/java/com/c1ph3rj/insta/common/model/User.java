@@ -9,6 +9,24 @@ public class User {
     private String Uuid;
     private String PhoneNumber;
     private boolean isNewUser;
+    private String currentDeviceDetails;
+    private String loginAt;
+
+    public String getLoginAt() {
+        return loginAt;
+    }
+
+    public void setLoginAt(String loginAt) {
+        this.loginAt = loginAt;
+    }
+
+    public String getCurrentDeviceDetails() {
+        return currentDeviceDetails;
+    }
+
+    public void setCurrentDeviceDetails(String currentDeviceDetails) {
+        this.currentDeviceDetails = currentDeviceDetails;
+    }
 
     public boolean isNewUser() {
         return isNewUser;

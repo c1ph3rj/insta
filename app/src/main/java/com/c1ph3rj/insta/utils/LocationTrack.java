@@ -37,7 +37,7 @@ public class LocationTrack extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 
 
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
     protected LocationManager locationManager;
 
     public LocationTrack(Context mContext) {
@@ -67,15 +67,15 @@ public class LocationTrack extends Service implements LocationListener {
                 // if GPS Enabled get lat/long using GPS Services
                 if (checkGPS) {
 
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                    }
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION);
+                    }// TODO: Consider calling
+//    ActivityCompat#requestPermissions
+// here to request the missing permissions, and then overriding
+//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                                          int[] grantResults)
+// to handle the case where the user grants the permission. See the documentation
+// for ActivityCompat#requestPermissions for more details.
                     locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
@@ -167,11 +167,7 @@ public class LocationTrack extends Service implements LocationListener {
         });
 
 
-        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        alertDialog.setNegativeButton("No", (dialog, which) -> dialog.cancel());
 
 
         alertDialog.show();

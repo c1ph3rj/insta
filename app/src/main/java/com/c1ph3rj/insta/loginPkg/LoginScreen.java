@@ -1,9 +1,13 @@
 package com.c1ph3rj.insta.loginPkg;
 
+import static com.c1ph3rj.insta.MainActivity.deviceInfo;
 import static com.c1ph3rj.insta.MainActivity.displayToast;
+import static com.c1ph3rj.insta.MainActivity.getTimeStamp;
+import static com.c1ph3rj.insta.MainActivity.userDetails;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -174,16 +178,18 @@ public class LoginScreen extends AppCompatActivity {
 
     private void saveUserDataToTheDb(FirebaseUser currentUser) {
         try {
-            User userModel = new User();
-            userModel.setUserName(currentUser.getDisplayName());
-            userModel.setEmailId(currentUser.getEmail());
-            userModel.setPhoneNumber((currentUser.getPhoneNumber() == null) ? "-" : currentUser.getPhoneNumber());
-            userModel.setUuid(currentUser.getUid());
-            userModel.setProfilePic(currentUser.getPhotoUrl());
-            userModel.setNewUser(isNewUser);
+            userDetails = new User();
+            userDetails.setUserName((currentUser.getDisplayName() == null) ? "-" : currentUser.getDisplayName());
+            userDetails.setEmailId(currentUser.getEmail());
+            userDetails.setPhoneNumber((currentUser.getPhoneNumber() == null) ? "-" : currentUser.getPhoneNumber());
+            userDetails.setUuid(currentUser.getUid());
+            userDetails.setProfilePic((currentUser.getPhotoUrl() == null) ? Uri.parse("-") : currentUser.getPhotoUrl());
+            userDetails.setNewUser(isNewUser);
+            userDetails.setCurrentDeviceDetails(deviceInfo(this));
+            userDetails.setLoginAt(getTimeStamp());
             fireStoreDb.collection("Users")
                     .document(currentUser.getUid())
-                    .set(userModel)
+                    .set(userDetails)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             displayToast("Successfully added", LoginScreen.this);
