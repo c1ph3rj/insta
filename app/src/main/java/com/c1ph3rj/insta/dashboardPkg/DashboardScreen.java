@@ -35,9 +35,9 @@ public class DashboardScreen extends AppCompatActivity {
 
     void init(){
         try {
-            dashboard = new Dashboard();
-            cameraView = new CameraView();
-            directs = new Directs();
+            dashboard = new Dashboard(this);
+            cameraView = new CameraView(this);
+            directs = new Directs(this);
             dashboardView = dashboardScreenBinding.DashboardView;
 
             ArrayList<Fragment> listOfDashboardView = new ArrayList<>();
@@ -49,6 +49,19 @@ public class DashboardScreen extends AppCompatActivity {
             dashboardView.setCurrentItem(1, false);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void setPageToDirect(){
+        dashboardView.setCurrentItem(2, true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(dashboardView.getCurrentItem() == 1){
+            finishAffinity();
+        }else {
+            dashboardView.setCurrentItem(1);
         }
     }
 }

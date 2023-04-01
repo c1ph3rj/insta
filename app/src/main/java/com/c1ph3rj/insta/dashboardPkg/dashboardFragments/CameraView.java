@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.c1ph3rj.insta.R;
+import com.c1ph3rj.insta.dashboardPkg.DashboardScreen;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +17,7 @@ import com.c1ph3rj.insta.R;
  * create an instance of this fragment.
  */
 public class CameraView extends Fragment {
+    DashboardScreen dashboardScreen;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,6 +30,10 @@ public class CameraView extends Fragment {
 
     public CameraView() {
         // Required empty public constructor
+    }
+
+    public CameraView(DashboardScreen dashboardScreen) {
+        this.dashboardScreen = dashboardScreen;
     }
 
     /**
