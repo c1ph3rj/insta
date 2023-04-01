@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".dashboardPkg.dashboardFragments.Dashboard">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/instagram"
+            android:layout_weight="10"
+            android:textColor="?attr/colorOnSurface"
+            android:fontFamily="@font/lobster_regular"
+            android:textSize="30sp"/>
+
+        <com.c1ph3rj.insta.utils.badgeIconPkg.ImageBadgeView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/like_ic"
+            app:ibv_badgeValue="20"
+            android:id="@+id/notificationBtn"
+            app:ibv_badgePadding="4dp"
+            app:ibv_badgeTextStyle="bold"
+            app:ibv_fixedBadgeRadius="4dp"
+            app:ibv_badgeColor="@color/instagramError"
+            app:ibv_roundBadge="true"
+            app:ibv_showCounter="false"
+            android:padding="2dp"
+            app:ibv_badgePosition="bottom_right"/>
+
+        <com.c1ph3rj.insta.utils.badgeIconPkg.ImageBadgeView
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/message_ic"
+            android:layout_marginStart="15dp"
+            app:ibv_showCounter="false"
+            android:id="@+id/directBtn"
+            app:ibv_badgeValue="19"
+            app:ibv_badgePadding="4dp"
+            app:ibv_fixedBadgeRadius="4dp"
+            app:ibv_maxBadgeValue="9"
+            app:ibv_badgeTextSize="8dp"
+            android:padding="4dp"
+            app:ibv_badgeTextStyle="bold"
+            app:ibv_badgeColor="@color/instagramError"
+            app:ibv_roundBadge="true"
+            app:ibv_badgePosition="bottom_right"/>
+
+
+    </LinearLayout>
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:id="@+id/refreshFeed">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/feedsView"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:id="@+id/homePageView"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:labelVisibilityMode="unlabeled"
+        android:id="@+id/bottomNavView"
+        app:menu="@menu/bottom_nav_menu"/>
+
+</LinearLayout>

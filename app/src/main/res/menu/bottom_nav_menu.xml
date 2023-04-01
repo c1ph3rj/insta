@@ -4,15 +4,16 @@
         android:icon="@drawable/home_ic_filled"
         android:title="Home" />
     <item android:id="@+id/search"
-        android:icon="@drawable/search_ic"
+        android:icon="@drawable/search_ic_filled"
         android:title="search" />
     <item android:id="@+id/addPost"
         android:icon="@drawable/add_post_ic"
         android:title="add Post" />
     <item android:id="@+id/reels"
-        android:icon="@drawable/video_ic"
+        android:icon="@drawable/video_ic_filled"
         android:title="reels" />
     <item android:id="@+id/profile"
         android:icon="@drawable/user_ic"
+        android:iconTint="@null"
         android:title="profile" />
 </menu>

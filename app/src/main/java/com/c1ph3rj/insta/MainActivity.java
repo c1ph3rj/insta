@@ -1,6 +1,7 @@
 package com.c1ph3rj.insta;
 
 import android.annotation.SuppressLint;
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -133,5 +134,10 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return deviceCurrentAddress;
+    }
+
+    public static boolean isDeviceIsInNightMode(Context context){
+        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
+        return uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES;
     }
 }

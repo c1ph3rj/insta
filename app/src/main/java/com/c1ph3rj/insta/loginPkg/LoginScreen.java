@@ -7,7 +7,6 @@ import static com.c1ph3rj.insta.MainActivity.userDetails;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -21,6 +20,7 @@ import androidx.cardview.widget.CardView;
 
 import com.c1ph3rj.insta.R;
 import com.c1ph3rj.insta.common.model.User;
+import com.c1ph3rj.insta.dashboardPkg.DashboardScreen;
 import com.c1ph3rj.insta.databinding.ActivityLoginScreenBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -183,7 +183,7 @@ public class LoginScreen extends AppCompatActivity {
             userDetails.setEmailId(currentUser.getEmail());
             userDetails.setPhoneNumber((currentUser.getPhoneNumber() == null) ? "-" : currentUser.getPhoneNumber());
             userDetails.setUuid(currentUser.getUid());
-            userDetails.setProfilePic((currentUser.getPhotoUrl() == null) ? Uri.parse("-") : currentUser.getPhotoUrl());
+            userDetails.setProfilePic((currentUser.getPhotoUrl() == null) ? "-" : String.valueOf(currentUser.getPhotoUrl()));
             userDetails.setNewUser(isNewUser);
             userDetails.setCurrentDeviceDetails(deviceInfo(this));
             userDetails.setLoginAt(getTimeStamp());
@@ -193,6 +193,7 @@ public class LoginScreen extends AppCompatActivity {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             displayToast("Successfully added", LoginScreen.this);
+                            startActivity(new Intent(LoginScreen.this, DashboardScreen.class));
                         } else {
                             displayToast("Failed", LoginScreen.this);
                             Objects.requireNonNull(task.getException()).printStackTrace();
