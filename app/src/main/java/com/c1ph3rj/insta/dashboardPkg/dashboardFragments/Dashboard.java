@@ -3,7 +3,10 @@ package com.c1ph3rj.insta.dashboardPkg.dashboardFragments;
 import static com.c1ph3rj.insta.MainActivity.isDeviceIsInNightMode;
 import static com.c1ph3rj.insta.MainActivity.userDetails;
 
+import android.graphics.BlendMode;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +17,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -64,6 +68,8 @@ public class Dashboard extends Fragment {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                                 userProfile.setIcon(resource);
+                                userProfile.setIconTintList(null);
+                                MenuItemCompat.setIconTintMode(userProfile, PorterDuff.Mode.DST_OVER);
                             }
 
                             @Override

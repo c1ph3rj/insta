@@ -89,6 +89,7 @@
         android:layout_height="wrap_content"
         app:labelVisibilityMode="unlabeled"
         android:id="@+id/bottomNavView"
+        app:itemIconTint="@null"
         app:menu="@menu/bottom_nav_menu"/>
 
 </LinearLayout>

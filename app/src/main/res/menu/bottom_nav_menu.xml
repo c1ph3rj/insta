@@ -8,6 +8,7 @@
         android:title="search" />
     <item android:id="@+id/addPost"
         android:icon="@drawable/add_post_ic"
+        android:iconTint="@null"
         android:title="add Post" />
     <item android:id="@+id/reels"
         android:icon="@drawable/video_ic_filled"
