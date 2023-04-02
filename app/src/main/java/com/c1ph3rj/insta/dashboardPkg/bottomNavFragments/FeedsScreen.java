@@ -1,15 +1,15 @@
 package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
+import com.c1ph3rj.insta.dashboardPkg.DashboardScreen;
 import com.c1ph3rj.insta.databinding.FragmentFeedsScreenBinding;
 import com.c1ph3rj.insta.utils.badgeIconPkg.ImageBadgeView;
 
@@ -17,9 +17,13 @@ public class FeedsScreen extends Fragment {
     ImageBadgeView notificationBtn;
     ImageBadgeView directBtn;
     FragmentFeedsScreenBinding feedsScreenBinding;
+    DashboardScreen dashboardScreen;
+
+    public FeedsScreen(DashboardScreen dashboardScreen) {
+        this.dashboardScreen = dashboardScreen;
+    }
 
     public FeedsScreen() {
-        // Required empty public constructor
     }
 
 
@@ -58,11 +62,16 @@ public class FeedsScreen extends Fragment {
         init();
     }
 
-    void init(){
+    void init() {
         try {
             notificationBtn = feedsScreenBinding.notificationBtn;
             directBtn = feedsScreenBinding.directBtn;
 
+            directBtn.setOnClickListener(onClickDirect -> {
+                if (dashboardScreen != null) {
+                    dashboardScreen.setPageToDirect();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -5,6 +5,7 @@ import static com.c1ph3rj.insta.MainActivity.userDetails;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,22 +13,29 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.c1ph3rj.insta.R;
 import com.c1ph3rj.insta.dashboardPkg.DashboardScreen;
+import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.FeedsScreen;
+import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.ProfileScreen;
+import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.ReelsScreen;
+import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.SearchScreen;
+import com.c1ph3rj.insta.dashboardPkg.homePagePkg.adapter.BottomNavAdapter;
 import com.c1ph3rj.insta.databinding.FragmentDashbordBinding;
-import com.c1ph3rj.insta.utils.badgeIconPkg.ImageBadgeView;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.ArrayList;
 
 public class Dashboard extends Fragment {
     FragmentDashbordBinding dashboardBinding;
-    BottomNavigationView bottomNavigationView;
-    ImageBadgeView notificationBtn;
-    ImageBadgeView directBtn;
+    public BottomNavigationView bottomNavigationView;
     DashboardScreen dashboardScreen;
+    public ViewPager2 homePageView;
 
     public Dashboard() {
         // Required empty public constructor
@@ -56,17 +64,42 @@ public class Dashboard extends Fragment {
     void init() {
         try {
             bottomNavigationView = dashboardBinding.bottomNavView;
+            homePageView = dashboardBinding.homePageView;
 
             setUserProfileToBottomNav();
 
-            notificationBtn = dashboardBinding.notificationBtn;
-            directBtn = dashboardBinding.directBtn;
+            ArrayList<Fragment> listOfHomePageView = new ArrayList<>();
+            FeedsScreen feedsScreen = new FeedsScreen(dashboardScreen);
+            SearchScreen searchScreen = new SearchScreen();
+            ReelsScreen reelsScreen = new ReelsScreen();
+            ProfileScreen profileScreen = new ProfileScreen(this);
+            listOfHomePageView.add(feedsScreen);
+            listOfHomePageView.add(searchScreen);
+            listOfHomePageView.add(reelsScreen);
+            listOfHomePageView.add(profileScreen);
 
-            directBtn.setOnClickListener(onClickDirect -> {
-                if(dashboardScreen != null){
-                    dashboardScreen.setPageToDirect();
+            BottomNavAdapter bottomNavAdapter = new BottomNavAdapter(requireActivity(), listOfHomePageView);
+            homePageView.setAdapter(bottomNavAdapter);
+            homePageView.setUserInputEnabled(false);
+
+            bottomNavigationView.setOnItemSelectedListener(item -> {
+                if(item.getItemId() == R.id.home){
+                    homePageView.setCurrentItem(0);
+                }else if(item.getItemId() == R.id.search){
+                    homePageView.setCurrentItem(1);
+                }else if(item.getItemId() == R.id.reels){
+                    homePageView.setCurrentItem(2);
+                }else if(item.getItemId() == R.id.profile){
+                    homePageView.setCurrentItem(3);
+                }else if(item.getItemId() == R.id.addPost){
+                    //TODO add Bottom sheet dialog for add Post view.
+                    System.out.println("ADD POST CLICKED");
                 }
+                dashboardScreen.dashboardView.setUserInputEnabled((item.getItemId() == R.id.home) || (item.getItemId() == R.id.addPost));
+                return  true;
             });
+
+//            homePageView.setCurrentItem(4, false);
         } catch (Exception e) {
             e.printStackTrace();
         }

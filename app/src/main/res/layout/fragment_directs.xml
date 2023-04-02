@@ -19,6 +19,7 @@
         <ImageView
             android:layout_width="28dp"
             android:layout_height="28dp"
+            android:id="@+id/backBtn"
             android:contentDescription="@string/src"
             android:src="@drawable/back_ic"
             app:tint="?attr/colorOnSurface"/>
@@ -72,7 +73,7 @@
                        android:maxLines="1"
                        android:hint="@string/search"
                        android:layout_marginStart="10dp"
-                       android:textColorHint="?attr/colorOnSurface"
+                       android:textColorHint="@color/lightGreyText"
                        android:background="@android:color/transparent"
                        android:fontFamily="@font/ibm_plex_mono_medium"
                        android:autofillHints="username"
@@ -104,7 +105,7 @@
                    android:layout_height="wrap_content"
                    android:text="@string/requests"
                    android:textSize="14sp"
-                   android:textColor="@color/linkBlue"
+                   android:textColor="@color/instagramBlue"
                    android:fontFamily="@font/ibm_plex_mono_medium"/>
 
 

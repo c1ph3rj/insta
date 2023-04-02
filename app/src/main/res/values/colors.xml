@@ -10,6 +10,7 @@
 
     <color name="instagramBlue">#3797EF</color>
     <color name="instagramLightWhite">#237C7B7B</color>
+    <color name="lightGreyText">#9A666565</color>
     <color name="instagramError">#EA5455</color>
     <color name="linkBlue">#0000EE</color>
 </resources>

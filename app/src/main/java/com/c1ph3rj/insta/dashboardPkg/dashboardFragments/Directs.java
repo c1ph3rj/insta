@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ public class Directs extends Fragment {
     DashboardScreen dashboardScreen;
     FragmentDirectsBinding directsBinding;
     TextView userNameView;
+    ImageView backBtn;
 
     public Directs() {
         // Required empty public constructor
@@ -46,6 +48,11 @@ public class Directs extends Fragment {
     void init() {
         try {
             userNameView = directsBinding.directUserNameView;
+            backBtn = directsBinding.backBtn;
+
+            backBtn.setOnClickListener(onClickBack ->{
+                dashboardScreen.onBackPressed();
+            });
 
             try {
                 userNameView.setText(userDetails.getUserName());

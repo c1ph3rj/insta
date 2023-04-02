@@ -1,14 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".dashboardPkg.bottomNavFragments.ProfileScreen">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="15dp"
+        android:paddingEnd="15dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:id="@+id/backBtn"
+            android:contentDescription="@string/src"
+            android:src="@drawable/back_ic"
+            app:tint="?attr/colorOnSurface"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/username"
+            android:gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="10"
+            android:id="@+id/profileUserNameView"
+            android:fontFamily="@font/ibm_plex_mono_semibold"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:id="@+id/settingsBtn"
+            android:contentDescription="@string/src"
+            android:src="@drawable/setting_ic"
+            app:tint="?attr/colorOnSurface"/>
+
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/refreshProfileView">
 
-</FrameLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:contentDescription="@string/src"
+                        android:id="@+id/userProfilePic"
+                        android:layout_weight="15"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:layout_margin="6dp"
+                            android:orientation="vertical"
+                            tools:ignore="NestedWeights">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/_20"
+                                android:id="@+id/postCount"
+                                android:textSize="14sp"
+                                android:fontFamily="@font/ibm_plex_mono_semibold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/posts"
+                                android:textSize="12sp"
+                                android:fontFamily="@font/ibm_plex_mono_light"/>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:layout_margin="6dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/_636"
+                                android:id="@+id/followersCount"
+                                android:textSize="14sp"
+                                android:fontFamily="@font/ibm_plex_mono_semibold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/followers"
+                                android:textSize="12sp"
+                                android:fontFamily="@font/ibm_plex_mono_light"/>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:layout_margin="6dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/_462"
+                                android:id="@+id/followingCount"
+                                android:textSize="14sp"
+                                android:fontFamily="@font/ibm_plex_mono_semibold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/following"
+                                android:textSize="12sp"
+                                android:fontFamily="@font/ibm_plex_mono_light"/>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingTop="10dp"
+                    android:orientation="vertical"
+                    android:paddingEnd="15dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginStart="5dp"
+                        android:id="@+id/aboutTheUserView"
+                        android:text="@string/about_the_user_demo"
+                        android:fontFamily="@font/ibm_plex_mono_medium"
+                        android:textSize="14sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/edit_profile"
+                            android:textAllCaps="false"
+                            app:cornerRadius="6dp"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp"
+                            android:fontFamily="@font/ibm_plex_mono_medium"
+                            android:id="@+id/editProfileBtn"
+                            android:outlineSpotShadowColor="@color/instagramLightWhite"
+                            android:textColor="?attr/colorOnSurface"
+                            android:backgroundTint="@color/instagramLightWhite"
+                            android:layout_weight="5"
+                            tools:targetApi="p"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/share_profile"
+                            app:cornerRadius="6dp"
+                            android:fontFamily="@font/ibm_plex_mono_medium"
+                            android:id="@+id/shareProfileBtn"
+                            android:textSize="12sp"
+                            android:outlineSpotShadowColor="@color/instagramLightWhite"
+                            android:textColor="?attr/colorOnSurface"
+                            android:backgroundTint="@color/instagramLightWhite"
+                            android:layout_marginStart="4dp"
+                            android:textAllCaps="false"
+                            android:layout_weight="5"
+                            tools:targetApi="p" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:id="@+id/listOfUsers"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

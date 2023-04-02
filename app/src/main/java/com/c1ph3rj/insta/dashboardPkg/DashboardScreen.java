@@ -19,7 +19,7 @@ public class DashboardScreen extends AppCompatActivity {
     Dashboard dashboard;
     Directs directs;
     CameraView cameraView;
-    ViewPager2 dashboardView;
+    public ViewPager2 dashboardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -15,6 +15,5 @@
         android:title="reels" />
     <item android:id="@+id/profile"
         android:icon="@drawable/user_ic"
-        android:iconTint="@null"
         android:title="profile" />
 </menu>

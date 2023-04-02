@@ -16,4 +16,15 @@
     <string name="search">search</string>
     <string name="messages">Messages</string>
     <string name="requests">Requests</string>
+    <string name="about_the_user_demo">About the user That Can be edited Or Added by the user with their wish.</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="share_profile">Share Profile</string>
+    <string name="_20">20</string>
+    <string name="posts">Posts</string>
+    <string name="_636">636</string>
+    <string name="followers">Followers</string>
+    <string name="_462">462</string>
+    <string name="following">Following</string>
+    <string name="follow">follow</string>
+    <string name="followed">followed</string>
 </resources>

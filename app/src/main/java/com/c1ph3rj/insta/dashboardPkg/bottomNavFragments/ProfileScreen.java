@@ -1,66 +1,165 @@
 package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments;
 
+import static com.c1ph3rj.insta.MainActivity.displayToast;
+import static com.c1ph3rj.insta.MainActivity.userDetails;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.c1ph3rj.insta.R;
+import com.c1ph3rj.insta.common.model.UserListModel;
+import com.c1ph3rj.insta.common.model.adpater.ListOfUsersAdapter;
+import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Dashboard;
+import com.c1ph3rj.insta.databinding.FragmentProfileScreenBinding;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileScreen#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class ProfileScreen extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    TextView userNameView;
+    ImageView backBtn;
+    ImageView settingsBtn;
+    FragmentProfileScreenBinding profileScreenBinding;
+    Dashboard dashboard;
+    ImageView userProfilePicView;
+    TextView postCountView, followersCountView, followingCountView;
+    TextView aboutTheUserView;
+    RecyclerView listOfUsersView;
+    FirebaseFirestore fireStoreDb;
+    ArrayList<UserListModel> listOfUsers;
+    ListOfUsersAdapter listOfUsersAdapter;
 
     public ProfileScreen() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileScreen.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileScreen newInstance(String param1, String param2) {
-        ProfileScreen fragment = new ProfileScreen();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public ProfileScreen(Dashboard dashboard) {
+        this.dashboard = dashboard;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_screen, container, false);
+        profileScreenBinding = FragmentProfileScreenBinding.inflate(inflater, container, false);
+        return profileScreenBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        init();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    void init() {
+        try {
+            userNameView = profileScreenBinding.profileUserNameView;
+            settingsBtn = profileScreenBinding.settingsBtn;
+            backBtn = profileScreenBinding.backBtn;
+            userProfilePicView = profileScreenBinding.userProfilePic;
+            followersCountView = profileScreenBinding.followersCount;
+            followingCountView = profileScreenBinding.followingCount;
+            postCountView = profileScreenBinding.postCount;
+            aboutTheUserView = profileScreenBinding.aboutTheUserView;
+            listOfUsersView = profileScreenBinding.listOfUsers;
+            fireStoreDb = FirebaseFirestore.getInstance();
+            Query getListOfUsers = fireStoreDb.collection("List_Of_Users")
+                    .whereNotEqualTo(FieldPath.documentId(), userDetails.getUuid())
+                    .orderBy(FieldPath.documentId())
+                    .limit(8);
+
+            listOfUsers = new ArrayList<>();
+
+            try {
+                Glide.with(requireActivity())
+                        .load(userDetails.getProfilePic())
+                        .error(R.drawable.user_ic)
+                        .placeholder(R.drawable.user_ic)
+                        .circleCrop()
+                        .into(userProfilePicView);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            backBtn.setOnClickListener(onClickBack -> {
+                try {
+                    dashboard.homePageView.setCurrentItem(0);
+                    dashboard.bottomNavigationView.setSelectedItemId(R.id.home);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            try {
+                userNameView.setText(userDetails.getUserName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                postCountView.setText(String.valueOf(userDetails.getNoOfPost()));
+                followingCountView.setText(String.valueOf(userDetails.getNoOfFollowing()));
+                followersCountView.setText(String.valueOf(userDetails.getNoOfFollowers()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (userDetails.getAboutUser().isEmpty()) {
+                    aboutTheUserView.setVisibility(View.GONE);
+                } else {
+                    aboutTheUserView.setText(userDetails.getAboutUser());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                listOfUsersAdapter = new ListOfUsersAdapter(requireActivity(), listOfUsers);
+                listOfUsersView.setAdapter(listOfUsersAdapter);
+                listOfUsersView.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                getListOfUsers.get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                    UserListModel userListModel = documentSnapshot.toObject(UserListModel.class);
+                                    listOfUsers.add(userListModel);
+                                }
+                                listOfUsersAdapter.notifyDataSetChanged();
+                            } else {
+                                displayToast("Something Went Wrong!", requireActivity());
+                            }
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

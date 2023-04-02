@@ -34,6 +34,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+
+/*
+TODO
+  Add Empty Collections for followers, Following, Post.
+  After Adding the followers the the collections filter the listOfUsersView with followers in profile page.
+  Add new feature to add post.
+  Add new feature to fetch post from the db.
+*/
+
 public class MainActivity extends AppCompatActivity {
     public static double latitude;
     public static double longitude;
