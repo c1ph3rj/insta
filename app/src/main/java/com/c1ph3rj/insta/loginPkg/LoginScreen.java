@@ -8,6 +8,7 @@ import static com.c1ph3rj.insta.MainActivity.userDetails;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -233,6 +234,7 @@ public class LoginScreen extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 userDoc = task.getResult();
                                 userDetails = userDoc.toObject(User.class);
+                                startActivity(new Intent(LoginScreen.this, DashboardScreen.class));
                             } else {
                                 displayToast("Something went Wrong!", LoginScreen.this);
                             }

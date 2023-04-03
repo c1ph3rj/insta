@@ -94,8 +94,6 @@ public class ProfileScreen extends Fragment {
                         .placeholder(R.drawable.user_ic)
                         .circleCrop()
                         .into(userProfilePicView);
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -134,7 +132,7 @@ public class ProfileScreen extends Fragment {
             }
 
             try {
-                listOfUsersAdapter = new ListOfUsersAdapter(requireActivity(), listOfUsers);
+                listOfUsersAdapter = new ListOfUsersAdapter(requireActivity(), listOfUsers, dashboard);
                 listOfUsersView.setAdapter(listOfUsersAdapter);
                 listOfUsersView.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
             } catch (Exception e) {

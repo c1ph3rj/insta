@@ -196,9 +196,9 @@
                             app:cornerRadius="6dp"
                             android:textSize="12sp"
                             android:layout_marginEnd="4dp"
+                            android:outlineProvider="none"
                             android:fontFamily="@font/ibm_plex_mono_medium"
                             android:id="@+id/editProfileBtn"
-                            android:outlineSpotShadowColor="@color/instagramLightWhite"
                             android:textColor="?attr/colorOnSurface"
                             android:backgroundTint="@color/instagramLightWhite"
                             android:layout_weight="5"
@@ -212,7 +212,7 @@
                             android:fontFamily="@font/ibm_plex_mono_medium"
                             android:id="@+id/shareProfileBtn"
                             android:textSize="12sp"
-                            android:outlineSpotShadowColor="@color/instagramLightWhite"
+                            android:outlineProvider="none"
                             android:textColor="?attr/colorOnSurface"
                             android:backgroundTint="@color/instagramLightWhite"
                             android:layout_marginStart="4dp"
@@ -244,10 +244,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/suggestion"
+                            android:layout_weight="10"
                             android:fontFamily="@font/ibm_plex_mono_medium" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/view_all"
                             android:gravity="end"

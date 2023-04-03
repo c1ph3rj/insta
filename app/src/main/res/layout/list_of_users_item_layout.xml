@@ -75,9 +75,9 @@
                 app:cardCornerRadius="6dp"
                 android:visibility="gone"
                 android:id="@+id/followedBtn"
+                android:outlineProvider="none"
                 android:layout_marginBottom="10dp"
                 android:layout_marginStart="15dp"
-                android:outlineSpotShadowColor="@color/instagramLightWhite"
                 android:backgroundTint="@color/instagramLightWhite"
                 android:layout_marginEnd="15dp"
                 tools:targetApi="p">
@@ -88,6 +88,7 @@
                     android:text="@string/followed"
                     android:id="@+id/followedBtnTxt"
                     android:textSize="14sp"
+                    android:textColor="@color/white"
                     android:fontFamily="@font/ibm_plex_mono_medium"
                     android:gravity="center"/>
 

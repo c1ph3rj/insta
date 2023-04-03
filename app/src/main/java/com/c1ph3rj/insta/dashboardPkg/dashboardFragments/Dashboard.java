@@ -17,6 +17,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.c1ph3rj.insta.R;
+import com.c1ph3rj.insta.common.model.UserListModel;
 import com.c1ph3rj.insta.dashboardPkg.DashboardScreen;
 import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.FeedsScreen;
 import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.ProfileScreen;
