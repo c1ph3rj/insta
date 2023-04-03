@@ -27,4 +27,6 @@
     <string name="following">Following</string>
     <string name="follow">follow</string>
     <string name="followed">followed</string>
+    <string name="suggestion">Suggestion</string>
+    <string name="view_all">View All</string>
 </resources>

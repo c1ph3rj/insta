@@ -8,8 +8,6 @@ import static com.c1ph3rj.insta.MainActivity.userDetails;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,7 +18,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.c1ph3rj.insta.MainActivity;
 import com.c1ph3rj.insta.R;
 import com.c1ph3rj.insta.common.model.User;
 import com.c1ph3rj.insta.common.model.UserListModel;
@@ -31,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -40,12 +38,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class LoginScreen extends AppCompatActivity {
@@ -192,7 +191,7 @@ public class LoginScreen extends AppCompatActivity {
             UserListModel userListDetails = new UserListModel();
             userDetails.setUuid(currentUser.getUid());
             userListDetails.setUuid(currentUser.getUid());
-            if(isNewUser){
+            if (isNewUser) {
                 userListDetails.setUserName(currentUser.getDisplayName());
                 userListDetails.setProfilePic((currentUser.getPhotoUrl() == null) ? "-" : String.valueOf(currentUser.getPhotoUrl()));
                 userDetails.setNewUser(true);
@@ -207,42 +206,34 @@ public class LoginScreen extends AppCompatActivity {
                 userDetails.setNoOfFollowing(0);
                 userDetails.setNoOfPost(0);
                 userDetails.setAboutUser("");
-                userDetails.setFollowers(new ArrayList<>());
-                userDetails.setFollowing(new ArrayList<>());
-                userDetails.setPosts(new ArrayList<>());
-                CollectionReference followersRef = documentReference.collection("followers");
-                CollectionReference followingRef = documentReference.collection("following");
-                CollectionReference postRef = documentReference.collection("followers");
-                fireStoreDb.collection("List_Of_Users")
+                Task<Void> listOfUsersRef = fireStoreDb.collection("List_Of_Users")
                         .document(currentUser.getUid())
-                                .set(userListDetails)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Log.i("UsersList", "User Added.");
-                            } else {
-                                Log.i("UsersList", "User Failed To Add.");
-                                Objects.requireNonNull(task.getException()).printStackTrace();
-                            }
-                        });
-                fireStoreDb.collection("Users")
+                        .set(userListDetails);
+                Task<Void> userRef = fireStoreDb.collection("Users")
                         .document(currentUser.getUid())
-                        .set(userDetails)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                startActivity(new Intent(LoginScreen.this, DashboardScreen.class));
-                            } else {
-                                displayToast("Something Went Wrong!", LoginScreen.this);
-                                Objects.requireNonNull(task.getException()).printStackTrace();
-                            }
-                        });
-            }else{
+                        .set(userDetails);
+                List<Task<?>> tasks = new ArrayList<>();
+                tasks.add(userRef);
+                tasks.add(listOfUsersRef);
+
+                Task<Void> allTasks = Tasks.whenAll(tasks);
+                allTasks.addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        startActivity(new Intent(LoginScreen.this, DashboardScreen.class));
+                    } else {
+                        displayToast("Something Went Wrong!", LoginScreen.this);
+                        Objects.requireNonNull(task.getException()).printStackTrace();
+                    }
+                });
+
+            } else {
                 documentReference = fireStoreDb.collection("Users").document(currentUser.getUid());
                 documentReference.get().addOnCompleteListener(
                         task -> {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 userDoc = task.getResult();
                                 userDetails = userDoc.toObject(User.class);
-                            }else{
+                            } else {
                                 displayToast("Something went Wrong!", LoginScreen.this);
                             }
                         }
