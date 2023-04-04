@@ -1,4 +1,4 @@
-package com.c1ph3rj.insta.common.model.adpater;
+package com.c1ph3rj.insta.common.adpater;
 
 import com.c1ph3rj.insta.common.model.UserListModel;
 

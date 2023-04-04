@@ -1,6 +1,6 @@
 package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments;
 
-import static com.c1ph3rj.insta.MainActivity.displayToast;
+import static com.c1ph3rj.insta.MainActivity.listOfFollowersUuid;
 import static com.c1ph3rj.insta.MainActivity.userDetails;
 
 import android.annotation.SuppressLint;
@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.c1ph3rj.insta.R;
+import com.c1ph3rj.insta.common.adpater.ListOfUsersAdapter;
 import com.c1ph3rj.insta.common.model.UserListModel;
-import com.c1ph3rj.insta.common.model.adpater.ListOfUsersAdapter;
 import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Dashboard;
 import com.c1ph3rj.insta.databinding.FragmentProfileScreenBinding;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -82,9 +82,7 @@ public class ProfileScreen extends Fragment {
             fireStoreDb = FirebaseFirestore.getInstance();
             Query getListOfUsers = fireStoreDb.collection("List_Of_Users")
                     .whereNotEqualTo(FieldPath.documentId(), userDetails.getUuid())
-                    .orderBy(FieldPath.documentId())
-                    .limit(8);
-
+                    .limit(50);
             listOfUsers = new ArrayList<>();
 
             try {
@@ -113,13 +111,7 @@ public class ProfileScreen extends Fragment {
                 e.printStackTrace();
             }
 
-            try {
-                postCountView.setText(String.valueOf(userDetails.getNoOfPost()));
-                followingCountView.setText(String.valueOf(userDetails.getNoOfFollowing()));
-                followersCountView.setText(String.valueOf(userDetails.getNoOfFollowers()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            updateProfileValues();
 
             try {
                 if (userDetails.getAboutUser().isEmpty()) {
@@ -132,7 +124,7 @@ public class ProfileScreen extends Fragment {
             }
 
             try {
-                listOfUsersAdapter = new ListOfUsersAdapter(requireActivity(), listOfUsers, dashboard);
+                listOfUsersAdapter = new ListOfUsersAdapter(requireActivity(), listOfUsers, this);
                 listOfUsersView.setAdapter(listOfUsersAdapter);
                 listOfUsersView.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
             } catch (Exception e) {
@@ -140,22 +132,33 @@ public class ProfileScreen extends Fragment {
             }
 
             try {
-                getListOfUsers.get()
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                                    UserListModel userListModel = documentSnapshot.toObject(UserListModel.class);
+                getListOfUsers.get().addOnCompleteListener(
+                        task -> {
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                UserListModel userListModel = documentSnapshot.toObject(UserListModel.class);
+                                assert userListModel != null;
+                                if (!listOfFollowersUuid.contains(userListModel.getUuid())) {
                                     listOfUsers.add(userListModel);
                                 }
-                                listOfUsersAdapter.notifyDataSetChanged();
-                            } else {
-                                displayToast("Something Went Wrong!", requireActivity());
                             }
-                        });
+
+                            listOfUsersAdapter.notifyDataSetChanged();
+                        }
+                );
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateProfileValues() {
+        try {
+            postCountView.setText(String.valueOf(userDetails.getNoOfPost()));
+            followingCountView.setText(String.valueOf(userDetails.getNoOfFollowing()));
+            followersCountView.setText(String.valueOf(userDetails.getNoOfFollowers()));
         } catch (Exception e) {
             e.printStackTrace();
         }

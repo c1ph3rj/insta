@@ -15,16 +15,16 @@ import com.c1ph3rj.insta.utils.badgeIconPkg.model.Badge;
 
 /**
  * Draw a badge and the count on ImageView
+ *
  * @author Ivan V on 21.02.2018.
  * @version 1.0
  */
 public class BadgeDrawer {
 
-    private BadgePosition position;
-    private Paint paint;
-
     private final View view;
     private final Badge badge;
+    private BadgePosition position;
+    private Paint paint;
 
     BadgeDrawer(View view, Badge badge) {
         this.view = view;
@@ -52,7 +52,7 @@ public class BadgeDrawer {
         if (paint == null) {
             paint = new Paint();
             paint.setAntiAlias(true);
-            Typeface typeface = Typeface.create(badge.getBadgeTextFont(), badge.getTextStyle());
+            Typeface typeface = Typeface.create(badge.getBadgeTextFont(), Typeface.NORMAL);
             paint.setTypeface(typeface);
             paint.setTextSize(badge.getBadgeTextSize());
         }
@@ -68,7 +68,7 @@ public class BadgeDrawer {
                     (int) position.getBadgeHeight());
             canvas.save();
             canvas.translate(position.getDeltaX() - position.getBadgeWidth() / 2,
-                             position.getDeltaY() - position.getBadgeHeight() / 2);
+                    position.getDeltaY() - position.getBadgeHeight() / 2);
             badge.getBackgroundDrawable().draw(canvas);
             canvas.restore();
         } else {

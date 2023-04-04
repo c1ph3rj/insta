@@ -6,32 +6,35 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.c1ph3rj.insta.common.adpater.PostModel;
 import com.c1ph3rj.insta.common.model.User;
+import com.c1ph3rj.insta.common.model.UserListModel;
 import com.c1ph3rj.insta.dashboardPkg.DashboardScreen;
 import com.c1ph3rj.insta.loginPkg.LoginScreen;
 import com.c1ph3rj.insta.utils.LocationTrack;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
@@ -48,43 +51,16 @@ public class MainActivity extends AppCompatActivity {
     public static double longitude;
     public static String deviceLocation;
     public static User userDetails;
+    public static ArrayList<UserListModel> listOfFollowers;
+    public static ArrayList<UserListModel> listOfFollowing;
+    public static ArrayList<String> listOfFollowersUuid;
+    public static ArrayList<String> listOfFollowingUuid;
+    public static ArrayList<PostModel> listOfPosts;
+
     FirebaseUser currentUser;
     FirebaseFirestore fireStoreDb;
     DocumentReference documentReference;
     DocumentSnapshot userDoc;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-
-        try {
-            fireStoreDb = FirebaseFirestore.getInstance();
-            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            currentUser = firebaseAuth.getCurrentUser();
-            if (currentUser != null) {
-                documentReference = fireStoreDb.collection("Users").document(currentUser.getUid());
-                documentReference.get().addOnCompleteListener(
-                        task -> {
-                            if(task.isSuccessful()){
-                                userDoc = task.getResult();
-                                userDetails = userDoc.toObject(User.class);
-                                new Handler().postDelayed(() ->
-                                        startActivity(new Intent(MainActivity.this, DashboardScreen.class)), 3000);
-                            }else{
-                                displayToast("Something went Wrong!", MainActivity.this);
-                            }
-                        }
-                );
-            }else{
-                new Handler().postDelayed(() ->
-                        startActivity(new Intent(MainActivity.this, LoginScreen.class)), 3000);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void displayToast(String toastMessage, Context context) {
         Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
@@ -145,8 +121,96 @@ public class MainActivity extends AppCompatActivity {
         return deviceCurrentAddress;
     }
 
-    public static boolean isDeviceIsInNightMode(Context context){
+    public static boolean isDeviceIsInNightMode(Context context) {
         UiModeManager uiModeManager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
         return uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+
+        try {
+            listOfFollowersUuid = new ArrayList<>();
+            listOfFollowingUuid = new ArrayList<>();
+            fireStoreDb = FirebaseFirestore.getInstance();
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            currentUser = firebaseAuth.getCurrentUser();
+            if (currentUser != null) {
+                documentReference = fireStoreDb.collection("Users").document(currentUser.getUid());
+                Task<DocumentSnapshot> getUserDetails = documentReference.get().addOnCompleteListener(
+                        task -> {
+                            if (task.isSuccessful()) {
+                                userDoc = task.getResult();
+                                userDetails = userDoc.toObject(User.class);
+                            } else {
+                                displayToast("Something went Wrong!", MainActivity.this);
+                            }
+                        }
+                );
+
+                Task<QuerySnapshot> getUserFollowersDetails = fireStoreDb.collection("Users")
+                        .document(currentUser.getUid())
+                        .collection("followers")
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            listOfFollowers = new ArrayList<>();
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                listOfFollowers.add(documentSnapshot.toObject(UserListModel.class));
+                                listOfFollowersUuid.add(Objects.requireNonNull(documentSnapshot.get("uuid")).toString());
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            e.printStackTrace();
+                            listOfFollowers = new ArrayList<>();
+                        });
+                Task<QuerySnapshot> getUserFollowingDetails = fireStoreDb.collection("Users")
+                        .document(currentUser.getUid())
+                        .collection("following")
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            listOfFollowing = new ArrayList<>();
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                listOfFollowing.add(documentSnapshot.toObject(UserListModel.class));
+                                listOfFollowingUuid.add(Objects.requireNonNull(documentSnapshot.get("uuid")).toString());
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            e.printStackTrace();
+                            listOfFollowing = new ArrayList<>();
+                        });
+                Task<QuerySnapshot> getUserPostDetails = fireStoreDb.collection("Users")
+                        .document(currentUser.getUid())
+                        .collection("posts")
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            listOfPosts = new ArrayList<>();
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                listOfPosts.add(documentSnapshot.toObject(PostModel.class));
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            e.printStackTrace();
+                            listOfPosts = new ArrayList<>();
+                        });
+
+                List<Task<?>> listOfTasks = new ArrayList<>();
+                listOfTasks.add(getUserDetails);
+                listOfTasks.add(getUserFollowersDetails);
+                listOfTasks.add(getUserFollowingDetails);
+                listOfTasks.add(getUserPostDetails);
+                Tasks.whenAll(listOfTasks)
+                        .addOnCompleteListener(task -> new Handler().postDelayed(() ->
+                                startActivity(new Intent(MainActivity.this, DashboardScreen.class)), 3000));
+
+            } else {
+                new Handler().postDelayed(() ->
+                        startActivity(new Intent(MainActivity.this, LoginScreen.class)), 3000);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

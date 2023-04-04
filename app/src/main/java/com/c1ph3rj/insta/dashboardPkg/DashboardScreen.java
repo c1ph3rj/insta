@@ -1,29 +1,25 @@
 package com.c1ph3rj.insta.dashboardPkg;
 
-import static com.c1ph3rj.insta.MainActivity.userDetails;
+import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.Bundle;
-
-import com.c1ph3rj.insta.common.model.UserListModel;
 import com.c1ph3rj.insta.dashboardPkg.adpater.DashboardViewAdapter;
 import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.CameraView;
 import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Dashboard;
 import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Directs;
 import com.c1ph3rj.insta.databinding.ActivityDashboardScreenBinding;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
 public class DashboardScreen extends AppCompatActivity {
+    public ViewPager2 dashboardView;
     ActivityDashboardScreenBinding dashboardScreenBinding;
     Dashboard dashboard;
     Directs directs;
     CameraView cameraView;
-    public ViewPager2 dashboardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +33,7 @@ public class DashboardScreen extends AppCompatActivity {
         }
     }
 
-    void init(){
+    void init() {
         try {
             dashboard = new Dashboard(this);
             cameraView = new CameraView(this);
@@ -56,15 +52,15 @@ public class DashboardScreen extends AppCompatActivity {
         }
     }
 
-    public void setPageToDirect(){
+    public void setPageToDirect() {
         dashboardView.setCurrentItem(2, true);
     }
 
     @Override
     public void onBackPressed() {
-        if(dashboardView.getCurrentItem() == 1){
+        if (dashboardView.getCurrentItem() == 1) {
             finishAffinity();
-        }else {
+        } else {
             dashboardView.setCurrentItem(1);
         }
     }

@@ -1,77 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".dashboardPkg.bottomNavFragments.FeedsScreen">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="15dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="4dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/instagram"
             android:layout_weight="10"
-            android:textColor="?attr/colorOnSurface"
             android:fontFamily="@font/lobster_regular"
-            android:textSize="30sp"/>
+            android:text="@string/instagram"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="30sp" />
 
         <com.c1ph3rj.insta.utils.badgeIconPkg.ImageBadgeView
+            android:id="@+id/notificationBtn"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/like_ic"
-            app:ibv_badgeValue="20"
-            android:id="@+id/notificationBtn"
-            app:ibv_badgePadding="4dp"
-            app:ibv_badgeTextStyle="bold"
-            app:ibv_fixedBadgeRadius="4dp"
-            app:ibv_badgeColor="@color/instagramError"
-            app:ibv_roundBadge="true"
-            app:ibv_showCounter="false"
             android:padding="2dp"
-            app:ibv_badgePosition="bottom_right"/>
+            android:src="@drawable/like_ic"
+            app:ibv_badgeColor="@color/instagramError"
+            app:ibv_badgePadding="4dp"
+            app:ibv_badgePosition="bottom_right"
+            app:ibv_badgeTextStyle="bold"
+            app:ibv_badgeValue="20"
+            app:ibv_fixedBadgeRadius="4dp"
+            app:ibv_roundBadge="true"
+            app:ibv_showCounter="false" />
 
         <com.c1ph3rj.insta.utils.badgeIconPkg.ImageBadgeView
+            android:id="@+id/directBtn"
             android:layout_width="34dp"
             android:layout_height="34dp"
-            android:src="@drawable/message_ic"
             android:layout_marginStart="15dp"
-            app:ibv_showCounter="false"
-            android:id="@+id/directBtn"
-            app:ibv_badgeValue="19"
+            android:padding="4dp"
+            android:src="@drawable/message_ic"
+            app:ibv_badgeColor="@color/instagramError"
             app:ibv_badgePadding="4dp"
+            app:ibv_badgePosition="bottom_right"
+            app:ibv_badgeTextSize="8dp"
+            app:ibv_badgeTextStyle="bold"
+            app:ibv_badgeValue="19"
             app:ibv_fixedBadgeRadius="4dp"
             app:ibv_maxBadgeValue="9"
-            app:ibv_badgeTextSize="8dp"
-            android:padding="4dp"
-            app:ibv_badgeTextStyle="bold"
-            app:ibv_badgeColor="@color/instagramError"
             app:ibv_roundBadge="true"
-            app:ibv_badgePosition="bottom_right"/>
+            app:ibv_showCounter="false" />
 
 
     </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshFeed"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
-        android:id="@+id/refreshFeed">
+        android:layout_weight="10">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/feedsView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/feedsView"/>
+            android:layout_height="wrap_content" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

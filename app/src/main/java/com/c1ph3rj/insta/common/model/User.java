@@ -1,11 +1,5 @@
 package com.c1ph3rj.insta.common.model;
 
-import android.net.Uri;
-
-import com.c1ph3rj.insta.common.model.adpater.PostModel;
-
-import java.util.ArrayList;
-
 public class User {
     private String UserName;
     private String ProfilePic;
@@ -20,32 +14,24 @@ public class User {
     private int noOfFollowing;
     private int noOfPost;
     private String aboutUser;
-    private ArrayList<UserListModel> followers;
-    private ArrayList<UserListModel> following;
-    private ArrayList<PostModel> posts;
+    private boolean newNotification;
+    private boolean newMessage;
 
-    public ArrayList<UserListModel> getFollowers() {
-        return followers;
+
+    public boolean isNewNotification() {
+        return newNotification;
     }
 
-    public void setFollowers(ArrayList<UserListModel> followers) {
-        this.followers = followers;
+    public void setNewNotification(boolean newNotification) {
+        this.newNotification = newNotification;
     }
 
-    public ArrayList<UserListModel> getFollowing() {
-        return following;
+    public boolean isNewMessage() {
+        return newMessage;
     }
 
-    public void setFollowing(ArrayList<UserListModel> following) {
-        this.following = following;
-    }
-
-    public ArrayList<PostModel> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(ArrayList<PostModel> posts) {
-        this.posts = posts;
+    public void setNewMessage(boolean newMessage) {
+        this.newMessage = newMessage;
     }
 
     public String getAboutUser() {

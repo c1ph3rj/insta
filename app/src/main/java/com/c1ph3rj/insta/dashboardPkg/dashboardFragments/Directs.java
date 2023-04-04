@@ -50,7 +50,7 @@ public class Directs extends Fragment {
             userNameView = directsBinding.directUserNameView;
             backBtn = directsBinding.backBtn;
 
-            backBtn.setOnClickListener(onClickBack ->{
+            backBtn.setOnClickListener(onClickBack -> {
                 dashboardScreen.onBackPressed();
             });
 

@@ -19,26 +19,16 @@ import androidx.core.app.ActivityCompat;
 
 public class LocationTrack extends Service implements LocationListener {
 
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
     private final Context mContext;
-
-
+    protected LocationManager locationManager;
     boolean checkGPS = false;
-
-
     boolean checkNetwork = false;
-
     boolean canGetLocation = false;
-
     Location loc;
     double latitude;
     double longitude;
-
-
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-
-
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
-    protected LocationManager locationManager;
 
     public LocationTrack(Context mContext) {
         this.mContext = mContext;

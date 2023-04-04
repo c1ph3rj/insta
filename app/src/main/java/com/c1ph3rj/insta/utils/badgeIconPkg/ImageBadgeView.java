@@ -344,13 +344,6 @@ public class ImageBadgeView extends AppCompatImageView {
     }
 
     /**
-     * Get the background of a badge {@link Drawable} or null.
-     */
-    public Drawable getBadgeBackgroundDrawable() {
-        return manager.getBadge().getBackgroundDrawable();
-    }
-
-    /**
      * Set the custom background of a badge
      *
      * @param badgeBackground the {@link Drawable} background of a badge from resources
@@ -359,6 +352,13 @@ public class ImageBadgeView extends AppCompatImageView {
         manager.getBadge().setBackgroundDrawable(badgeBackground);
         invalidate();
         return this;
+    }
+
+    /**
+     * Get the background of a badge {@link Drawable} or null.
+     */
+    public Drawable getBadgeBackgroundDrawable() {
+        return manager.getBadge().getBackgroundDrawable();
     }
 
     /**

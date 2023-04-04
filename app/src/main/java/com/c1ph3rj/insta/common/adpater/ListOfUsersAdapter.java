@@ -1,9 +1,8 @@
-package com.c1ph3rj.insta.common.model.adpater;
+package com.c1ph3rj.insta.common.adpater;
 
 import static com.c1ph3rj.insta.MainActivity.displayToast;
 import static com.c1ph3rj.insta.MainActivity.userDetails;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +15,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.c1ph3rj.insta.MainActivity;
 import com.c1ph3rj.insta.R;
 import com.c1ph3rj.insta.common.model.UserListModel;
-import com.c1ph3rj.insta.dashboardPkg.DashboardScreen;
-import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Dashboard;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.ProfileScreen;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.button.MaterialButton;
@@ -38,12 +33,14 @@ import java.util.Map;
 
 public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.ViewHolder> {
     Context context;
+    ProfileScreen profileScreen;
     ArrayList<UserListModel> listOfUsers;
     ArrayList<Boolean> listOfFollowBtnProcess;
 
-    public ListOfUsersAdapter(Context context, ArrayList<UserListModel> listOfUsers, Dashboard dashboard){
+    public ListOfUsersAdapter(Context context, ArrayList<UserListModel> listOfUsers, ProfileScreen profileScreen) {
         this.listOfUsers = listOfUsers;
         this.context = context;
+        this.profileScreen = profileScreen;
     }
 
     @NonNull
@@ -73,8 +70,7 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
                 e.printStackTrace();
             }
             try {
-                holder.followBtn.setOnClickListener(onCLickFollow ->{
-                    isFollowBtnClicked = true;
+                holder.followBtn.setOnClickListener(onCLickFollow -> {
                     followTheUser(userListModel, holder);
                 });
             } catch (Exception e) {
@@ -85,7 +81,7 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
         }
     }
 
-    void followTheUser(UserListModel friendModel, ViewHolder holder){
+    void followTheUser(UserListModel friendModel, ViewHolder holder) {
         FirebaseFirestore fireStoreDb = FirebaseFirestore.getInstance();
         DocumentReference userDetailsRef = fireStoreDb.collection("Users")
                 .document(userDetails.getUuid());
@@ -94,40 +90,49 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
                 .document(friendModel.getUuid())
                 .get()
                 .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()) {
+                    if (task.isSuccessful()) {
                         DocumentSnapshot friendDetailsRef = task.getResult();
                         if (friendDetailsRef.exists()) {
                             userDetailsRef.collection("followers")
                                     .document(friendModel.getUuid())
                                     .delete();
-                            Map<String, Object> noOfFollowers = new HashMap<>();
-                            userDetails.setNoOfFollowers(userDetails.getNoOfFollowers() - 1);
-                            noOfFollowers.put("noOfFollowers", userDetails.getNoOfFollowers());
-                            userDetailsRef.update(noOfFollowers);
+                            Map<String, Object> noOfFollowing = new HashMap<>();
+                            userDetails.setNoOfFollowing(userDetails.getNoOfFollowing() - 1);
+                            noOfFollowing.put("noOfFollowing", userDetails.getNoOfFollowing());
+                            userDetailsRef.update(noOfFollowing);
                         } else {
                             List<Task<?>> listOfTasks = new ArrayList<>();
                             Task<Void> addFriendRef = userDetailsRef.collection("followers")
                                     .document(friendModel.getUuid())
                                     .set(friendModel);
-                            Map<String, Object> noOfFollowers = new HashMap<>();
-                            userDetails.setNoOfFollowers(userDetails.getNoOfFollowers() + 1);
-                            noOfFollowers.put("noOfFollowers", userDetails.getNoOfFollowers());
-                            Task<Void> increaseFollowersCountRef = userDetailsRef.update(noOfFollowers);
+                            Map<String, Object> noOfFollowing = new HashMap<>();
+                            userDetails.setNoOfFollowing(userDetails.getNoOfFollowing() + 1);
+                            noOfFollowing.put("noOfFollowing", userDetails.getNoOfFollowing());
+                            Task<Void> increaseFollowersCountRef = userDetailsRef.update(noOfFollowing);
                             listOfTasks.add(addFriendRef);
                             listOfTasks.add(increaseFollowersCountRef);
 
                             Tasks.whenAll(listOfTasks)
                                     .addOnCompleteListener(addedFriend -> {
-                                        if(addedFriend.isSuccessful()){
+                                        if (addedFriend.isSuccessful()) {
                                             holder.followedView.setVisibility(View.VISIBLE);
                                             holder.followBtn.setVisibility(View.GONE);
-                                            holder.followedBtnTxt.setText("Followed");
+                                            holder.followedBtnTxt.setText(context.getString(R.string.followed));
+                                            profileScreen.updateProfileValues();
+                                        } else {
+                                            displayToast("Something Went Wrong!", context);
+                                            holder.followedView.setVisibility(View.GONE);
+                                            holder.followBtn.setVisibility(View.VISIBLE);
+                                            userDetails.setNoOfFollowing(userDetails.getNoOfFollowing() - 1);
+                                            profileScreen.updateProfileValues();
                                         }
                                     })
                                     .addOnFailureListener(e -> {
                                         displayToast("Something Went Wrong!", context);
                                         holder.followedView.setVisibility(View.GONE);
                                         holder.followBtn.setVisibility(View.VISIBLE);
+                                        userDetails.setNoOfFollowing(userDetails.getNoOfFollowing() - 1);
+                                        profileScreen.updateProfileValues();
                                     });
                         }
                     }
@@ -139,7 +144,7 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
         return listOfUsers.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView userNameView;
         TextView followedBtnTxt;
         MaterialButton followBtn;

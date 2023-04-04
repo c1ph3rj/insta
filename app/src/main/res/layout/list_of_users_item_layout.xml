@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="170dp"
     android:layout_height="200dp"
     android:gravity="center"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
@@ -17,27 +17,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="10"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="10">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="70dp"
                 android:layout_height="70dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="14dp"
-                app:cardElevation="10dp"
                 android:layout_marginEnd="25dp"
-                android:layout_gravity="center"
                 android:layout_marginBottom="8dp"
-                app:cardCornerRadius="180dp">
+                app:cardCornerRadius="180dp"
+                app:cardElevation="10dp">
 
                 <ImageView
+                    android:id="@+id/userProfilePicView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/user_ic"
+                    android:contentDescription="@string/src"
                     android:scaleType="centerCrop"
-                    android:id="@+id/userProfilePicView"
-                    android:contentDescription="@string/src"/>
+                    android:src="@drawable/user_ic" />
 
             </androidx.cardview.widget.CardView>
 
@@ -57,40 +57,40 @@
                 android:textSize="14sp" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/followBtn"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:text="@string/follow"
-                android:textAllCaps="false"
-                app:cornerRadius="6dp"
-                android:textSize="14sp"
-                android:textColor="@color/white"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:fontFamily="@font/ibm_plex_mono_medium"
-                android:id="@+id/followBtn" />
+                android:text="@string/follow"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:cornerRadius="6dp" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/followedBtn"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                app:cardCornerRadius="6dp"
-                android:visibility="gone"
-                android:id="@+id/followedBtn"
-                android:outlineProvider="none"
-                android:layout_marginBottom="10dp"
                 android:layout_marginStart="15dp"
-                android:backgroundTint="@color/instagramLightWhite"
                 android:layout_marginEnd="15dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/instagramLightWhite"
+                android:outlineProvider="none"
+                android:visibility="gone"
+                app:cardCornerRadius="6dp"
                 tools:targetApi="p">
 
                 <TextView
+                    android:id="@+id/followedBtnTxt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="@string/followed"
-                    android:id="@+id/followedBtnTxt"
-                    android:textSize="14sp"
-                    android:textColor="@color/white"
                     android:fontFamily="@font/ibm_plex_mono_medium"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="@string/followed"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
             </androidx.cardview.widget.CardView>
 

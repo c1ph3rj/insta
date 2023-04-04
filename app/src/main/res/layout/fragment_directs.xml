@@ -1,125 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".dashboardPkg.dashboardFragments.Directs">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingStart="15dp"
         android:paddingTop="8dp"
-        android:paddingBottom="15dp"
         android:paddingEnd="15dp"
-        android:orientation="horizontal">
+        android:paddingBottom="15dp">
 
         <ImageView
+            android:id="@+id/backBtn"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:id="@+id/backBtn"
             android:contentDescription="@string/src"
             android:src="@drawable/back_ic"
-            app:tint="?attr/colorOnSurface"/>
+            app:tint="?attr/colorOnSurface" />
 
         <TextView
+            android:id="@+id/directUserNameView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/username"
-            android:gravity="center_vertical"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="4dp"
-            android:id="@+id/directUserNameView"
             android:fontFamily="@font/ibm_plex_mono_semibold"
+            android:gravity="center_vertical"
+            android:text="@string/username"
             android:textSize="18sp" />
 
     </LinearLayout>
 
-   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-           <androidx.cardview.widget.CardView
-               android:layout_width="match_parent"
-               android:layout_height="40dp"
-               app:cardCornerRadius="8dp"
-               android:layout_marginStart="15dp"
-               android:layout_marginEnd="15dp">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                app:cardCornerRadius="8dp">
 
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:padding="8dp"
-                   android:gravity="center_vertical"
-                   android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                   <ImageView
-                       android:layout_width="24dp"
-                       android:layout_height="24dp"
-                       app:tint="?attr/colorOnSurface"
-                       android:src="@drawable/search_ic"
-                       android:contentDescription="@string/src"/>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@string/src"
+                        android:src="@drawable/search_ic"
+                        app:tint="?attr/colorOnSurface" />
 
-                   <EditText
-                       android:layout_width="match_parent"
-                       android:layout_height="match_parent"
-                       android:maxLines="1"
-                       android:hint="@string/search"
-                       android:layout_marginStart="10dp"
-                       android:textColorHint="@color/lightGreyText"
-                       android:background="@android:color/transparent"
-                       android:fontFamily="@font/ibm_plex_mono_medium"
-                       android:autofillHints="username"
-                       android:inputType="text" />
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:autofillHints="username"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/ibm_plex_mono_medium"
+                        android:hint="@string/search"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:textColorHint="@color/lightGreyText" />
 
-               </LinearLayout>
+                </LinearLayout>
 
-           </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:paddingStart="18dp"
-               android:paddingEnd="18dp"
-               android:paddingTop="12dp"
-               android:paddingBottom="8dp"
-               android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="8dp">
 
-               <TextView
-                   android:layout_width="0dp"
-                   android:layout_height="wrap_content"
-                   android:text="@string/messages"
-                   android:layout_weight="5"
-                   android:textSize="14sp"
-                   android:fontFamily="@font/ibm_plex_mono_medium"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:fontFamily="@font/ibm_plex_mono_medium"
+                    android:text="@string/messages"
+                    android:textSize="14sp" />
 
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="@string/requests"
-                   android:textSize="14sp"
-                   android:textColor="@color/instagramBlue"
-                   android:fontFamily="@font/ibm_plex_mono_medium"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ibm_plex_mono_medium"
+                    android:text="@string/requests"
+                    android:textColor="@color/instagramBlue"
+                    android:textSize="14sp" />
 
 
-           </LinearLayout>
+            </LinearLayout>
 
-           <ListView
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:id="@+id/directMessagesView"
-               />
+            <ListView
+                android:id="@+id/directMessagesView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-       </LinearLayout>
+        </LinearLayout>
 
-   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </LinearLayout>

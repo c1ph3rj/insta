@@ -5,6 +5,7 @@ import android.util.TypedValue;
 
 /**
  * Util methods for converting data value
+ *
  * @author Ivan V on 19.02.2018.
  * @version 1.0
  */

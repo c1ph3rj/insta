@@ -8,7 +8,6 @@ import static com.c1ph3rj.insta.MainActivity.userDetails;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,7 +43,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,6 +62,37 @@ public class LoginScreen extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     boolean isNewUser;
     boolean isAccountPrivate = false;
+    public ActivityResultLauncher<Intent> getResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                    GoogleSignInAccount userAccount;
+                    userAccount = task.getResult();
+                    if (userAccount.getIdToken() != null) {
+                        AuthCredential userCredentials = GoogleAuthProvider.getCredential(userAccount.getIdToken(), null);
+                        firebaseAuth.signInWithCredential(userCredentials)
+                                .addOnCompleteListener(firebaseSignIn -> {
+                                    if (firebaseSignIn.isSuccessful()) {
+                                        AdditionalUserInfo additionalUserInfo = firebaseSignIn.getResult().getAdditionalUserInfo();
+                                        assert additionalUserInfo != null;
+                                        isNewUser = additionalUserInfo.isNewUser();
+                                        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                                        saveUserDataToTheDb(currentUser);
+                                    } else {
+                                        displayToast("Something went wrong!", this);
+                                    }
+                                })
+                                .addOnFailureListener(Throwable::printStackTrace);
+                    } else {
+                        displayToast("Something went wrong!", this);
+                    }
+                } else {
+                    displayToast("Something went wrong!", this);
+                }
+                loginProgress.setVisibility(View.GONE);
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,39 +181,6 @@ public class LoginScreen extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
-    public ActivityResultLauncher<Intent> getResult = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent data = result.getData();
-                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                    GoogleSignInAccount userAccount;
-                    userAccount = task.getResult();
-                    if (userAccount.getIdToken() != null) {
-                        AuthCredential userCredentials = GoogleAuthProvider.getCredential(userAccount.getIdToken(), null);
-                        firebaseAuth.signInWithCredential(userCredentials)
-                                .addOnCompleteListener(firebaseSignIn -> {
-                                    if (firebaseSignIn.isSuccessful()) {
-                                        AdditionalUserInfo additionalUserInfo = firebaseSignIn.getResult().getAdditionalUserInfo();
-                                        assert additionalUserInfo != null;
-                                        isNewUser = additionalUserInfo.isNewUser();
-                                        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                                        saveUserDataToTheDb(currentUser);
-                                    } else {
-                                        displayToast("Something went wrong!", this);
-                                    }
-                                })
-                                .addOnFailureListener(Throwable::printStackTrace);
-                    } else {
-                        displayToast("Something went wrong!", this);
-                    }
-                } else {
-                    displayToast("Something went wrong!", this);
-                }
-                loginProgress.setVisibility(View.GONE);
-            });
 
     private void saveUserDataToTheDb(FirebaseUser currentUser) {
         try {

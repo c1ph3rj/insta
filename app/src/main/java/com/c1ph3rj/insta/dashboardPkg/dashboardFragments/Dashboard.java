@@ -5,7 +5,6 @@ import static com.c1ph3rj.insta.MainActivity.userDetails;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,7 +16,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.c1ph3rj.insta.R;
-import com.c1ph3rj.insta.common.model.UserListModel;
 import com.c1ph3rj.insta.dashboardPkg.DashboardScreen;
 import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.FeedsScreen;
 import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.ProfileScreen;
@@ -28,21 +26,20 @@ import com.c1ph3rj.insta.databinding.FragmentDashbordBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 
 public class Dashboard extends Fragment {
-    FragmentDashbordBinding dashboardBinding;
     public BottomNavigationView bottomNavigationView;
-    DashboardScreen dashboardScreen;
     public ViewPager2 homePageView;
+    FragmentDashbordBinding dashboardBinding;
+    DashboardScreen dashboardScreen;
 
     public Dashboard() {
         // Required empty public constructor
     }
 
-    public Dashboard(DashboardScreen dashboardScreen){
+    public Dashboard(DashboardScreen dashboardScreen) {
         this.dashboardScreen = dashboardScreen;
     }
 
@@ -84,20 +81,20 @@ public class Dashboard extends Fragment {
             homePageView.setUserInputEnabled(false);
 
             bottomNavigationView.setOnItemSelectedListener(item -> {
-                if(item.getItemId() == R.id.home){
+                if (item.getItemId() == R.id.home) {
                     homePageView.setCurrentItem(0);
-                }else if(item.getItemId() == R.id.search){
+                } else if (item.getItemId() == R.id.search) {
                     homePageView.setCurrentItem(1);
-                }else if(item.getItemId() == R.id.reels){
+                } else if (item.getItemId() == R.id.reels) {
                     homePageView.setCurrentItem(2);
-                }else if(item.getItemId() == R.id.profile){
+                } else if (item.getItemId() == R.id.profile) {
                     homePageView.setCurrentItem(3);
-                }else if(item.getItemId() == R.id.addPost){
+                } else if (item.getItemId() == R.id.addPost) {
                     //TODO add Bottom sheet dialog for add Post view.
                     System.out.println("ADD POST CLICKED");
                 }
                 dashboardScreen.dashboardView.setUserInputEnabled((item.getItemId() == R.id.home) || (item.getItemId() == R.id.addPost));
-                return  true;
+                return true;
             });
 
 //            homePageView.setCurrentItem(4, false);
