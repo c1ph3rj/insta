@@ -4,6 +4,15 @@ public class UserListModel {
     private String uuid;
     private String profilePic;
     private String userName;
+    private boolean isAccountPrivate;
+
+    public boolean isAccountPrivate() {
+        return isAccountPrivate;
+    }
+
+    public void setAccountPrivate(boolean accountPrivate) {
+        isAccountPrivate = accountPrivate;
+    }
 
     public String getUuid() {
         return uuid;

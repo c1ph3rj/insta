@@ -1,5 +1,7 @@
 package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments;
 
+import static com.c1ph3rj.insta.MainActivity.userDetails;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +74,26 @@ public class FeedsScreen extends Fragment {
                     dashboardScreen.setPageToDirect();
                 }
             });
+
+            checkForNewNotifications();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void checkForNewNotifications(){
+        try {
+            if(userDetails.isNewMessage()){
+                directBtn.setBadgeValue(5);
+            }else{
+                directBtn.clearBadge();
+            }
+
+            if(userDetails.isNewNotification()){
+                notificationBtn.setBadgeValue(5);
+            }else{
+                notificationBtn.clearBadge();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -91,7 +91,6 @@ public class LoginScreen extends AppCompatActivity {
                 } else {
                     displayToast("Something went wrong!", this);
                 }
-                loginProgress.setVisibility(View.GONE);
             });
 
     @Override
@@ -190,6 +189,7 @@ public class LoginScreen extends AppCompatActivity {
             userListDetails.setUuid(currentUser.getUid());
             if (isNewUser) {
                 userListDetails.setUserName(currentUser.getDisplayName());
+                userListDetails.setAccountPrivate(false);
                 userListDetails.setProfilePic((currentUser.getPhotoUrl() == null) ? "-" : String.valueOf(currentUser.getPhotoUrl()));
                 userDetails.setNewUser(true);
                 userDetails.setUserName((currentUser.getDisplayName() == null) ? "-" : currentUser.getDisplayName());
@@ -234,6 +234,7 @@ public class LoginScreen extends AppCompatActivity {
                             } else {
                                 displayToast("Something went Wrong!", LoginScreen.this);
                             }
+                            loginProgress.setVisibility(View.GONE);
                         }
                 );
             }
