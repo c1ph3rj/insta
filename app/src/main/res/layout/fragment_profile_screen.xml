@@ -225,10 +225,11 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/suggestionView"
+                    android:id="@+id/suggestionsView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
+                    android:animateLayoutChanges="true"
                     android:orientation="vertical"
                     android:visibility="visible">
 
@@ -241,7 +242,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="10"
                             android:fontFamily="@font/ibm_plex_mono_medium"
@@ -264,6 +265,35 @@
                         android:layout_height="200dp" />
 
                 </LinearLayout>
+
+                <com.google.android.material.tabs.TabLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabMode="fixed"
+
+
+                    android:background="@android:color/transparent"
+                    app:tabRippleColor="@color/white"
+                    app:tabIndicatorColor="@color/white"
+                    app:tabInlineLabel="false"
+                    android:id="@+id/userContentsTabs">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/post_ic" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/video_ic_filled" />
+
+                </com.google.android.material.tabs.TabLayout>
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/userContentsView"/>
 
             </LinearLayout>
 

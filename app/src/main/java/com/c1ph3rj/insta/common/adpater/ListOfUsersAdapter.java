@@ -40,6 +40,7 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
         this.listOfUsers = listOfUsers;
         this.context = context;
         this.profileScreen = profileScreen;
+        listOfFollowBtnProcess = new ArrayList<>();
     }
 
     @NonNull

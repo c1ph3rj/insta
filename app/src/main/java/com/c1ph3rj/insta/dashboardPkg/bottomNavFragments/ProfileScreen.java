@@ -3,12 +3,16 @@ package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments;
 import static com.c1ph3rj.insta.MainActivity.listOfFollowersUuid;
 import static com.c1ph3rj.insta.MainActivity.userDetails;
 
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.c1ph3rj.insta.R;
@@ -23,6 +28,7 @@ import com.c1ph3rj.insta.common.adpater.ListOfUsersAdapter;
 import com.c1ph3rj.insta.common.model.UserListModel;
 import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Dashboard;
 import com.c1ph3rj.insta.databinding.FragmentProfileScreenBinding;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,6 +49,9 @@ public class ProfileScreen extends Fragment {
     FirebaseFirestore fireStoreDb;
     ArrayList<UserListModel> listOfUsers;
     ListOfUsersAdapter listOfUsersAdapter;
+    LinearLayout suggestionsView;
+    TabLayout userContentTabs;
+    ViewPager2 userContentView;
 
     public ProfileScreen() {
         // Required empty public constructor
@@ -79,11 +88,22 @@ public class ProfileScreen extends Fragment {
             postCountView = profileScreenBinding.postCount;
             aboutTheUserView = profileScreenBinding.aboutTheUserView;
             listOfUsersView = profileScreenBinding.listOfUsers;
+            suggestionsView = profileScreenBinding.suggestionsView;
+            userContentTabs = profileScreenBinding.userContentsTabs;
+            userContentView = profileScreenBinding.userContentsView;
+
             fireStoreDb = FirebaseFirestore.getInstance();
             Query getListOfUsers = fireStoreDb.collection("List_Of_Users")
                     .whereNotEqualTo(FieldPath.documentId(), userDetails.getUuid())
                     .limit(50);
             listOfUsers = new ArrayList<>();
+
+            try {
+                suggestionsView.setVisibility(View.GONE);
+                suggestionsView.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             try {
                 Glide.with(requireActivity())
@@ -134,15 +154,24 @@ public class ProfileScreen extends Fragment {
             try {
                 getListOfUsers.get().addOnCompleteListener(
                         task -> {
-                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                                UserListModel userListModel = documentSnapshot.toObject(UserListModel.class);
-                                assert userListModel != null;
-                                if (!listOfFollowersUuid.contains(userListModel.getUuid())) {
-                                    listOfUsers.add(userListModel);
+                            if(task.isSuccessful()){
+                                for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                    UserListModel userListModel = documentSnapshot.toObject(UserListModel.class);
+                                    assert userListModel != null;
+                                    if (!listOfFollowersUuid.contains(userListModel.getUuid())) {
+                                        listOfUsers.add(userListModel);
+                                    }
+                                }
+
+                                if(listOfUsers.size() != 0){
+                                    new Handler()
+                                            .postDelayed(() ->{
+                                                listOfUsersAdapter.notifyDataSetChanged();
+                                                suggestionsView.setVisibility(View.VISIBLE);
+                                                TransitionManager.beginDelayedTransition((ViewGroup) suggestionsView.getParent());
+                                            }, 3000);
                                 }
                             }
-
-                            listOfUsersAdapter.notifyDataSetChanged();
                         }
                 );
             } catch (Exception e) {
