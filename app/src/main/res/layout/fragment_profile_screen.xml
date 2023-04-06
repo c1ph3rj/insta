@@ -20,8 +20,9 @@
             android:id="@+id/backBtn"
             android:layout_width="28dp"
             android:layout_height="28dp"
+            android:padding="2dp"
             android:contentDescription="@string/src"
-            android:src="@drawable/back_ic"
+            android:src="@drawable/lock_ic"
             app:tint="?attr/colorOnSurface" />
 
         <TextView

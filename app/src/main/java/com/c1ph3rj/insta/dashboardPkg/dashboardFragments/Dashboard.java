@@ -3,6 +3,9 @@ package com.c1ph3rj.insta.dashboardPkg.dashboardFragments;
 import static com.c1ph3rj.insta.MainActivity.userDetails;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -26,6 +30,7 @@ import com.c1ph3rj.insta.databinding.FragmentDashbordBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 
@@ -34,6 +39,7 @@ public class Dashboard extends Fragment {
     public ViewPager2 homePageView;
     FragmentDashbordBinding dashboardBinding;
     DashboardScreen dashboardScreen;
+    int selectedBottomNavPosition = R.id.home;
 
     public Dashboard() {
         // Required empty public constructor
@@ -82,22 +88,40 @@ public class Dashboard extends Fragment {
 
             bottomNavigationView.setOnItemSelectedListener(item -> {
                 if (item.getItemId() == R.id.home) {
+                    selectedBottomNavPosition = item.getItemId();
                     homePageView.setCurrentItem(0);
                 } else if (item.getItemId() == R.id.search) {
+                    selectedBottomNavPosition = item.getItemId();
                     homePageView.setCurrentItem(1);
                 } else if (item.getItemId() == R.id.reels) {
+                    selectedBottomNavPosition = item.getItemId();
                     homePageView.setCurrentItem(2);
                 } else if (item.getItemId() == R.id.profile) {
+                    selectedBottomNavPosition = item.getItemId();
                     homePageView.setCurrentItem(3);
                 } else if (item.getItemId() == R.id.addPost) {
-                    //TODO add Bottom sheet dialog for add Post view.
-                    System.out.println("ADD POST CLICKED");
+                    showBottomSheetDialog();
                 }
                 dashboardScreen.dashboardView.setUserInputEnabled((item.getItemId() == R.id.home) || (item.getItemId() == R.id.addPost));
                 return true;
             });
 
-//            homePageView.setCurrentItem(4, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showBottomSheetDialog() {
+        try {
+            BottomSheetDialog addPostDialog = new BottomSheetDialog(requireActivity(), R.style.BottomSheetDialog);
+            View view = LayoutInflater.from(requireActivity())
+                    .inflate(R.layout.add_post_layout,null);
+            addPostDialog.setContentView(view);
+            addPostDialog.show();
+
+
+            addPostDialog.setOnDismissListener(dialog ->
+                    bottomNavigationView.setSelectedItemId(selectedBottomNavPosition));
         } catch (Exception e) {
             e.printStackTrace();
         }
