@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.c1ph3rj.insta.R;
 import com.c1ph3rj.insta.common.model.UserListModel;
-import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.ProfileScreen;
+import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.profilePkg.ProfileScreen;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.button.MaterialButton;

@@ -1,4 +1,4 @@
-package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments;
+package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.profilePkg;
 
 import static com.c1ph3rj.insta.MainActivity.listOfFollowersUuid;
 import static com.c1ph3rj.insta.MainActivity.userDetails;
@@ -47,6 +47,7 @@ public class ProfileScreen extends Fragment {
     TextView aboutTheUserView;
     RecyclerView listOfUsersView;
     FirebaseFirestore fireStoreDb;
+    TextView viewAllSuggestionsBtn;
     ArrayList<UserListModel> listOfUsers;
     ListOfUsersAdapter listOfUsersAdapter;
     LinearLayout suggestionsView;
@@ -91,12 +92,27 @@ public class ProfileScreen extends Fragment {
             suggestionsView = profileScreenBinding.suggestionsView;
             userContentTabs = profileScreenBinding.userContentsTabs;
             userContentView = profileScreenBinding.userContentsView;
+            viewAllSuggestionsBtn = profileScreenBinding.viewAllSuggestionBtn;
 
             fireStoreDb = FirebaseFirestore.getInstance();
             Query getListOfUsers = fireStoreDb.collection("List_Of_Users")
                     .whereNotEqualTo(FieldPath.documentId(), userDetails.getUuid())
                     .limit(50);
             listOfUsers = new ArrayList<>();
+
+            int [] listOfTabIcons = new int[] {R.drawable.post_ic, R.drawable.video_ic_filled, R.drawable.tag_ic};
+            int [] listOfTabIds = new int[] {101, 102, 103};
+
+            try {
+                for(int i = 0; i < listOfTabIcons.length; i++){
+                    TabLayout.Tab tabItem = userContentTabs.newTab();
+                    tabItem.setIcon(listOfTabIcons[i]);
+                    tabItem.setId(listOfTabIds[i]);
+                    userContentTabs.addTab(tabItem);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             try {
                 suggestionsView.setVisibility(View.GONE);
@@ -154,7 +170,7 @@ public class ProfileScreen extends Fragment {
             try {
                 getListOfUsers.get().addOnCompleteListener(
                         task -> {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                                     UserListModel userListModel = documentSnapshot.toObject(UserListModel.class);
                                     assert userListModel != null;
@@ -163,9 +179,12 @@ public class ProfileScreen extends Fragment {
                                     }
                                 }
 
-                                if(listOfUsers.size() != 0){
+                                if (listOfUsers.size() != 0) {
                                     new Handler()
-                                            .postDelayed(() ->{
+                                            .postDelayed(() -> {
+                                                if(listOfUsers.size() < 15){
+                                                    viewAllSuggestionsBtn.setVisibility(View.GONE);
+                                                }
                                                 listOfUsersAdapter.notifyDataSetChanged();
                                                 suggestionsView.setVisibility(View.VISIBLE);
                                                 TransitionManager.beginDelayedTransition((ViewGroup) suggestionsView.getParent());
@@ -182,6 +201,7 @@ public class ProfileScreen extends Fragment {
             e.printStackTrace();
         }
     }
+
 
     public void updateProfileValues() {
         try {

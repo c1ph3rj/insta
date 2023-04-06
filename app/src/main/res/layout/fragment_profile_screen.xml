@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".dashboardPkg.bottomNavFragments.ProfileScreen">
+    tools:context=".dashboardPkg.bottomNavFragments.profilePkg.ProfileScreen">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -191,7 +191,7 @@
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/editProfileBtn"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="55dp"
                             android:layout_marginEnd="4dp"
                             android:layout_weight="5"
                             android:backgroundTint="@color/instagramLightWhite"
@@ -200,14 +200,14 @@
                             android:text="@string/edit_profile"
                             android:textAllCaps="false"
                             android:textColor="?attr/colorOnSurface"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             app:cornerRadius="6dp"
                             tools:targetApi="p" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/shareProfileBtn"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="55dp"
                             android:layout_marginStart="4dp"
                             android:layout_weight="5"
                             android:backgroundTint="@color/instagramLightWhite"
@@ -216,7 +216,7 @@
                             android:text="@string/share_profile"
                             android:textAllCaps="false"
                             android:textColor="?attr/colorOnSurface"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             app:cornerRadius="6dp"
                             tools:targetApi="p" />
 
@@ -268,26 +268,30 @@
 
                 <com.google.android.material.tabs.TabLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:tabMode="fixed"
-
-
+                    android:layout_height="?actionBarSize"
                     android:background="@android:color/transparent"
-                    app:tabRippleColor="@color/white"
-                    app:tabIndicatorColor="@color/white"
+                    app:tabRippleColor="?attr/colorOnSurface"
+                    app:tabIndicatorColor="?attr/colorOnSurface"
+                    app:tabIndicatorHeight="2dp"
+                    app:tabIconTint="?attr/colorOnSurface"
                     app:tabInlineLabel="false"
                     android:id="@+id/userContentsTabs">
 
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <!--<com.google.android.material.tabs.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:icon="@drawable/post_ic" />
 
                     <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:icon="@drawable/video_ic_filled" />
 
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:icon="@drawable/tag_ic" />
+-->
                 </com.google.android.material.tabs.TabLayout>
 
                 <androidx.viewpager2.widget.ViewPager2

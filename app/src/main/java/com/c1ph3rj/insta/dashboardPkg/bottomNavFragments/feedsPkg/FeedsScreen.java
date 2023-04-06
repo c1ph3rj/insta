@@ -1,4 +1,4 @@
-package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments;
+package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.feedsPkg;
 
 import static com.c1ph3rj.insta.MainActivity.userDetails;
 
