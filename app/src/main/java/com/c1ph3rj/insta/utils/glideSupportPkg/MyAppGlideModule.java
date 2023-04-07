@@ -1,4 +1,4 @@
-package com.c1ph3rj.insta;
+package com.c1ph3rj.insta.utils.glideSupportPkg;
 
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;

@@ -1,17 +1,33 @@
-package com.c1ph3rj.insta.common.adpater;
-
-import com.c1ph3rj.insta.common.model.UserListModel;
+package com.c1ph3rj.insta.common.model;
 
 import java.util.ArrayList;
 
 public class PostModel {
+    private String postUuid;
     private String fileName;
     private String uploadTime;
     private String fileType;
     private ArrayList<String> tags;
     private String Location;
     private String description;
-    private ArrayList<UserListModel> listOfPeople;
+    private ArrayList<FriendsModel> listOfPeopleLiked;
+    private ArrayList<CommentsModel> listOfComments;
+
+    public ArrayList<CommentsModel> getListOfComments() {
+        return listOfComments;
+    }
+
+    public void setListOfComments(ArrayList<CommentsModel> listOfComments) {
+        this.listOfComments = listOfComments;
+    }
+
+    public String getPostUuid() {
+        return postUuid;
+    }
+
+    public void setPostUuid(String postUuid) {
+        this.postUuid = postUuid;
+    }
 
     public ArrayList<String> getTags() {
         return tags;
@@ -37,12 +53,12 @@ public class PostModel {
         this.description = description;
     }
 
-    public ArrayList<UserListModel> getListOfPeople() {
-        return listOfPeople;
+    public ArrayList<FriendsModel> getListOfPeopleLiked() {
+        return listOfPeopleLiked;
     }
 
-    public void setListOfPeople(ArrayList<UserListModel> listOfPeople) {
-        this.listOfPeople = listOfPeople;
+    public void setListOfPeopleLiked(ArrayList<FriendsModel> listOfPeopleLiked) {
+        this.listOfPeopleLiked = listOfPeopleLiked;
     }
 
     public String getFileName() {

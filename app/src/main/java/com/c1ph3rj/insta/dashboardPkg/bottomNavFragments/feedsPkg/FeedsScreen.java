@@ -1,6 +1,6 @@
 package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.feedsPkg;
 
-import static com.c1ph3rj.insta.MainActivity.userDetails;
+import static com.c1ph3rj.insta.MainActivity.userModelDetails;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -83,13 +83,13 @@ public class FeedsScreen extends Fragment {
 
     void checkForNewNotifications(){
         try {
-            if(userDetails.isNewMessage()){
+            if(userModelDetails.isNewMessage()){
                 directBtn.setBadgeValue(5);
             }else{
                 directBtn.clearBadge();
             }
 
-            if(userDetails.isNewNotification()){
+            if(userModelDetails.isNewNotification()){
                 notificationBtn.setBadgeValue(5);
             }else{
                 notificationBtn.clearBadge();

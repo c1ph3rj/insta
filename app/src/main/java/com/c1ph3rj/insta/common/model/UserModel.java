@@ -1,6 +1,6 @@
 package com.c1ph3rj.insta.common.model;
 
-public class User {
+public class UserModel {
     private String UserName;
     private String ProfilePic;
     private String EmailId;

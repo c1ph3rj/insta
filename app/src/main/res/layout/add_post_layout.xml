@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
+        android:id="@+id/postVideosBtn"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
@@ -56,6 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:id="@+id/postPhotosBtn"
         android:orientation="horizontal">
 
         <ImageView
@@ -79,6 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:id="@+id/postStoryBtn"
         android:layout_marginBottom="30dp"
         android:orientation="horizontal">
 

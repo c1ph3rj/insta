@@ -1,6 +1,6 @@
 package com.c1ph3rj.insta.common.model;
 
-public class UserListModel {
+public class FriendsModel {
     private String uuid;
     private String profilePic;
     private String userName;

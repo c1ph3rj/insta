@@ -1,7 +1,7 @@
 package com.c1ph3rj.insta;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -14,12 +14,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.c1ph3rj.insta.common.adpater.PostModel;
-import com.c1ph3rj.insta.common.model.User;
-import com.c1ph3rj.insta.common.model.UserListModel;
+import com.c1ph3rj.insta.common.model.FriendsModel;
+import com.c1ph3rj.insta.common.model.PostModel;
+import com.c1ph3rj.insta.common.model.UserModel;
 import com.c1ph3rj.insta.dashboardPkg.DashboardScreen;
 import com.c1ph3rj.insta.loginPkg.LoginScreen;
-import com.c1ph3rj.insta.utils.LocationTrack;
+import com.c1ph3rj.insta.utils.LocationPkg.LocationTrack;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,20 +39,23 @@ import java.util.concurrent.TimeUnit;
 
 
 /*
-TODO
-  Add Empty Collections for followers, Following, Post.
-  After Adding the followers the the collections filter the listOfUsersView with followers in profile page.
+TODO Tomorrow tasks.
+  working on POST feature.
   Add new feature to add post.
-  Add new feature to fetch post from the db.
+  fetch all the images and video files form the local storage and show it in grid view.
+  add camera feature to capture and record video.
+  method to upload the post data to the firebase storage and add the details to the post array in user model (Not yet created).
+  fetch the post and display it in the feeds page of other users.
+  fetch the post and display it in the user profile section.
 */
 
 public class MainActivity extends AppCompatActivity {
     public static double latitude;
     public static double longitude;
     public static String deviceLocation;
-    public static User userDetails;
-    public static ArrayList<UserListModel> listOfFollowers;
-    public static ArrayList<UserListModel> listOfFollowing;
+    public static UserModel userModelDetails;
+    public static ArrayList<FriendsModel> listOfFollowers;
+    public static ArrayList<FriendsModel> listOfFollowing;
     public static ArrayList<String> listOfFollowersUuid;
     public static ArrayList<String> listOfFollowingUuid;
     public static ArrayList<PostModel> listOfPosts;
@@ -61,6 +64,28 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore fireStoreDb;
     DocumentReference documentReference;
     DocumentSnapshot userDoc;
+    public static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
+    public static final String[] LOCATION_PERMISSION = new String[]{
+            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    public static final String[] STORAGE_PERMISSION = new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+    public static final String[] ALL_PERMISSIONS = new String[]{
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.CAMERA,
+            android.Manifest.permission.READ_CONTACTS,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.READ_PHONE_STATE,
+            android.Manifest.permission.READ_SMS,
+            android.Manifest.permission.RECEIVE_SMS,
+            android.Manifest.permission.RECEIVE_WAP_PUSH,
+            android.Manifest.permission.RECORD_AUDIO,
+            android.Manifest.permission.SEND_SMS,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
 
     public static void displayToast(String toastMessage, Context context) {
         Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
@@ -121,11 +146,6 @@ public class MainActivity extends AppCompatActivity {
         return deviceCurrentAddress;
     }
 
-    public static boolean isDeviceIsInNightMode(Context context) {
-        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
-        return uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                         task -> {
                             if (task.isSuccessful()) {
                                 userDoc = task.getResult();
-                                userDetails = userDoc.toObject(User.class);
+                                userModelDetails = userDoc.toObject(UserModel.class);
                             } else {
                                 displayToast("Something went Wrong!", MainActivity.this);
                             }
@@ -158,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             listOfFollowers = new ArrayList<>();
                             for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                                listOfFollowers.add(documentSnapshot.toObject(UserListModel.class));
+                                listOfFollowers.add(documentSnapshot.toObject(FriendsModel.class));
                                 listOfFollowersUuid.add(Objects.requireNonNull(documentSnapshot.get("uuid")).toString());
                             }
                         })
@@ -173,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             listOfFollowing = new ArrayList<>();
                             for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                                listOfFollowing.add(documentSnapshot.toObject(UserListModel.class));
+                                listOfFollowing.add(documentSnapshot.toObject(FriendsModel.class));
                                 listOfFollowingUuid.add(Objects.requireNonNull(documentSnapshot.get("uuid")).toString());
                             }
                         })
@@ -213,4 +233,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
 }

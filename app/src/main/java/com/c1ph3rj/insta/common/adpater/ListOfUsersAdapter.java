@@ -1,7 +1,7 @@
 package com.c1ph3rj.insta.common.adpater;
 
 import static com.c1ph3rj.insta.MainActivity.displayToast;
-import static com.c1ph3rj.insta.MainActivity.userDetails;
+import static com.c1ph3rj.insta.MainActivity.userModelDetails;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.c1ph3rj.insta.R;
-import com.c1ph3rj.insta.common.model.UserListModel;
+import com.c1ph3rj.insta.common.model.FriendsModel;
 import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.profilePkg.ProfileScreen;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -33,10 +33,10 @@ import java.util.Map;
 public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.ViewHolder> {
     Context context;
     ProfileScreen profileScreen;
-    ArrayList<UserListModel> listOfUsers;
+    ArrayList<FriendsModel> listOfUsers;
     ArrayList<Boolean> listOfFollowBtnProcess;
 
-    public ListOfUsersAdapter(Context context, ArrayList<UserListModel> listOfUsers, ProfileScreen profileScreen) {
+    public ListOfUsersAdapter(Context context, ArrayList<FriendsModel> listOfUsers, ProfileScreen profileScreen) {
         this.listOfUsers = listOfUsers;
         this.context = context;
         this.profileScreen = profileScreen;
@@ -54,16 +54,16 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
-            UserListModel userListModel = listOfUsers.get(position);
+            FriendsModel friendsModel = listOfUsers.get(position);
             listOfFollowBtnProcess.add(position, false);
             try {
-                holder.userNameView.setText(userListModel.getUserName());
+                holder.userNameView.setText(friendsModel.getUserName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
                 Glide.with(context)
-                        .load(userListModel.getProfilePic())
+                        .load(friendsModel.getProfilePic())
                         .placeholder(R.drawable.user_ic)
                         .error(R.drawable.user_ic)
                         .into(holder.userProfilePicView);
@@ -74,7 +74,7 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
                 holder.followBtn.setOnClickListener(onCLickFollow -> {
                     if (!listOfFollowBtnProcess.get(position)) {
                         listOfFollowBtnProcess.set(position, true);
-                        followTheUser(userListModel, holder, position);
+                        followTheUser(friendsModel, holder, position);
                     }
                 });
 
@@ -87,11 +87,11 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
         }
     }
 
-    void followTheUser(UserListModel friendModel, ViewHolder holder, int position) {
+    void followTheUser(FriendsModel friendModel, ViewHolder holder, int position) {
         try {
             FirebaseFirestore fireStoreDb = FirebaseFirestore.getInstance();
             DocumentReference userDetailsRef = fireStoreDb.collection("Users")
-                    .document(userDetails.getUuid());
+                    .document(userModelDetails.getUuid());
 
             userDetailsRef.collection("followers")
                     .document(friendModel.getUuid())
@@ -104,8 +104,8 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
                                         .document(friendModel.getUuid())
                                         .delete();
                                 Map<String, Object> noOfFollowing = new HashMap<>();
-                                userDetails.setNoOfFollowing(userDetails.getNoOfFollowing() - 1);
-                                noOfFollowing.put("noOfFollowing", userDetails.getNoOfFollowing());
+                                userModelDetails.setNoOfFollowing(userModelDetails.getNoOfFollowing() - 1);
+                                noOfFollowing.put("noOfFollowing", userModelDetails.getNoOfFollowing());
                                 userDetailsRef.update(noOfFollowing);
                             } else {
                                 List<Task<?>> listOfTasks = new ArrayList<>();
@@ -113,7 +113,7 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
                                         .document(friendModel.getUuid())
                                         .set(friendModel);
                                 Map<String, Object> noOfFollowing = new HashMap<>();
-                                noOfFollowing.put("noOfFollowing", userDetails.getNoOfFollowing());
+                                noOfFollowing.put("noOfFollowing", userModelDetails.getNoOfFollowing());
                                 Task<Void> increaseFollowersCountRef = userDetailsRef.update(noOfFollowing);
                                 listOfTasks.add(addFriendRef);
                                 listOfTasks.add(increaseFollowersCountRef);
@@ -126,7 +126,7 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
                                                 if (friendModel.isAccountPrivate()) {
                                                     holder.followedBtn.setText(R.string.requested);
                                                 } else {
-                                                    userDetails.setNoOfFollowing(userDetails.getNoOfFollowing() + 1);
+                                                    userModelDetails.setNoOfFollowing(userModelDetails.getNoOfFollowing() + 1);
                                                     holder.followedBtn.setText(context.getString(R.string.followed));
                                                 }
                                                 profileScreen.updateProfileValues();

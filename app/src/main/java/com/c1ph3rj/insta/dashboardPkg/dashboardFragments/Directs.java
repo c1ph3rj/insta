@@ -1,6 +1,6 @@
 package com.c1ph3rj.insta.dashboardPkg.dashboardFragments;
 
-import static com.c1ph3rj.insta.MainActivity.userDetails;
+import static com.c1ph3rj.insta.MainActivity.userModelDetails;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -55,7 +55,7 @@ public class Directs extends Fragment {
             });
 
             try {
-                userNameView.setText(userDetails.getUserName());
+                userNameView.setText(userModelDetails.getUserName());
             } catch (Exception e) {
                 e.printStackTrace();
             }

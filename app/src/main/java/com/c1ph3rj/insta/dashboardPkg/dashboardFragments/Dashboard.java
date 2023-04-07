@@ -1,20 +1,17 @@
 package com.c1ph3rj.insta.dashboardPkg.dashboardFragments;
 
-import static com.c1ph3rj.insta.MainActivity.userDetails;
+import static com.c1ph3rj.insta.MainActivity.userModelDetails;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -117,9 +114,37 @@ public class Dashboard extends Fragment {
             View view = LayoutInflater.from(requireActivity())
                     .inflate(R.layout.add_post_layout,null);
             addPostDialog.setContentView(view);
+
+            LinearLayout postVideosBtn = view.findViewById(R.id.postVideosBtn);
+            LinearLayout postPhotosBtn = view.findViewById(R.id.postPhotosBtn);
+            LinearLayout postStoryBtn = view.findViewById(R.id.postStoryBtn);
+
+            postVideosBtn.setOnClickListener(onClickPostVideos ->{
+                try {
+                    addPostDialog.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            postPhotosBtn.setOnClickListener(onClickPostVideos ->{
+                try {
+                    addPostDialog.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            postStoryBtn.setOnClickListener(onClickPostVideos ->{
+                try {
+                    addPostDialog.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+
             addPostDialog.show();
-
-
             addPostDialog.setOnDismissListener(dialog ->
                     bottomNavigationView.setSelectedItemId(selectedBottomNavPosition));
         } catch (Exception e) {
@@ -138,7 +163,7 @@ public class Dashboard extends Fragment {
 
             try {
                 Glide.with(requireActivity())
-                        .load(userDetails.getProfilePic())
+                        .load(userModelDetails.getProfilePic())
                         .circleCrop()
                         .into(userPro);
                 itemView.addView(userPro);

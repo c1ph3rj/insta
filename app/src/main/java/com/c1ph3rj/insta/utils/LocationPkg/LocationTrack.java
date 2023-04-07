@@ -1,4 +1,4 @@
-package com.c1ph3rj.insta.utils;
+package com.c1ph3rj.insta.utils.LocationPkg;
 
 import android.Manifest;
 import android.app.Service;

@@ -1,7 +1,7 @@
 package com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.profilePkg;
 
 import static com.c1ph3rj.insta.MainActivity.listOfFollowersUuid;
-import static com.c1ph3rj.insta.MainActivity.userDetails;
+import static com.c1ph3rj.insta.MainActivity.userModelDetails;
 
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
@@ -25,7 +25,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.c1ph3rj.insta.R;
 import com.c1ph3rj.insta.common.adpater.ListOfUsersAdapter;
-import com.c1ph3rj.insta.common.model.UserListModel;
+import com.c1ph3rj.insta.common.model.FriendsModel;
 import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Dashboard;
 import com.c1ph3rj.insta.databinding.FragmentProfileScreenBinding;
 import com.google.android.material.tabs.TabLayout;
@@ -38,8 +38,8 @@ import java.util.ArrayList;
 
 public class ProfileScreen extends Fragment {
     TextView userNameView;
-    ImageView backBtn;
     ImageView settingsBtn;
+    ImageView privateIcon;
     FragmentProfileScreenBinding profileScreenBinding;
     Dashboard dashboard;
     ImageView userProfilePicView;
@@ -48,7 +48,7 @@ public class ProfileScreen extends Fragment {
     RecyclerView listOfUsersView;
     FirebaseFirestore fireStoreDb;
     TextView viewAllSuggestionsBtn;
-    ArrayList<UserListModel> listOfUsers;
+    ArrayList<FriendsModel> listOfUsers;
     ListOfUsersAdapter listOfUsersAdapter;
     LinearLayout suggestionsView;
     TabLayout userContentTabs;
@@ -82,7 +82,6 @@ public class ProfileScreen extends Fragment {
         try {
             userNameView = profileScreenBinding.profileUserNameView;
             settingsBtn = profileScreenBinding.settingsBtn;
-            backBtn = profileScreenBinding.backBtn;
             userProfilePicView = profileScreenBinding.userProfilePic;
             followersCountView = profileScreenBinding.followersCount;
             followingCountView = profileScreenBinding.followingCount;
@@ -92,11 +91,12 @@ public class ProfileScreen extends Fragment {
             suggestionsView = profileScreenBinding.suggestionsView;
             userContentTabs = profileScreenBinding.userContentsTabs;
             userContentView = profileScreenBinding.userContentsView;
+            privateIcon = profileScreenBinding.privateIcon;
             viewAllSuggestionsBtn = profileScreenBinding.viewAllSuggestionBtn;
 
             fireStoreDb = FirebaseFirestore.getInstance();
             Query getListOfUsers = fireStoreDb.collection("List_Of_Users")
-                    .whereNotEqualTo(FieldPath.documentId(), userDetails.getUuid())
+                    .whereNotEqualTo(FieldPath.documentId(), userModelDetails.getUuid())
                     .limit(50);
             listOfUsers = new ArrayList<>();
 
@@ -123,7 +123,7 @@ public class ProfileScreen extends Fragment {
 
             try {
                 Glide.with(requireActivity())
-                        .load(userDetails.getProfilePic())
+                        .load(userModelDetails.getProfilePic())
                         .error(R.drawable.user_ic)
                         .placeholder(R.drawable.user_ic)
                         .circleCrop()
@@ -132,17 +132,18 @@ public class ProfileScreen extends Fragment {
                 e.printStackTrace();
             }
 
-            backBtn.setOnClickListener(onClickBack -> {
-                try {
-                    dashboard.homePageView.setCurrentItem(0);
-                    dashboard.bottomNavigationView.setSelectedItemId(R.id.home);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                if(userModelDetails.isAccountPrivate()){
+                    privateIcon.setVisibility(View.VISIBLE);
+                }else{
+                    privateIcon.setVisibility(View.GONE);
                 }
-            });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             try {
-                userNameView.setText(userDetails.getUserName());
+                userNameView.setText(userModelDetails.getUserName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -150,10 +151,10 @@ public class ProfileScreen extends Fragment {
             updateProfileValues();
 
             try {
-                if (userDetails.getAboutUser().isEmpty()) {
+                if (userModelDetails.getAboutUser().isEmpty()) {
                     aboutTheUserView.setVisibility(View.GONE);
                 } else {
-                    aboutTheUserView.setText(userDetails.getAboutUser());
+                    aboutTheUserView.setText(userModelDetails.getAboutUser());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -172,10 +173,10 @@ public class ProfileScreen extends Fragment {
                         task -> {
                             if (task.isSuccessful()) {
                                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                                    UserListModel userListModel = documentSnapshot.toObject(UserListModel.class);
-                                    assert userListModel != null;
-                                    if (!listOfFollowersUuid.contains(userListModel.getUuid())) {
-                                        listOfUsers.add(userListModel);
+                                    FriendsModel friendsModel = documentSnapshot.toObject(FriendsModel.class);
+                                    assert friendsModel != null;
+                                    if (!listOfFollowersUuid.contains(friendsModel.getUuid())) {
+                                        listOfUsers.add(friendsModel);
                                     }
                                 }
 
@@ -205,9 +206,9 @@ public class ProfileScreen extends Fragment {
 
     public void updateProfileValues() {
         try {
-            postCountView.setText(String.valueOf(userDetails.getNoOfPost()));
-            followingCountView.setText(String.valueOf(userDetails.getNoOfFollowing()));
-            followersCountView.setText(String.valueOf(userDetails.getNoOfFollowers()));
+            postCountView.setText(String.valueOf(userModelDetails.getNoOfPost()));
+            followingCountView.setText(String.valueOf(userModelDetails.getNoOfFollowing()));
+            followersCountView.setText(String.valueOf(userModelDetails.getNoOfFollowers()));
         } catch (Exception e) {
             e.printStackTrace();
         }

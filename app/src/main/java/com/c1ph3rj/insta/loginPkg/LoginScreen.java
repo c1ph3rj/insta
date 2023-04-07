@@ -1,9 +1,10 @@
 package com.c1ph3rj.insta.loginPkg;
 
+import static com.c1ph3rj.insta.MainActivity.ALL_PERMISSIONS;
 import static com.c1ph3rj.insta.MainActivity.deviceInfo;
 import static com.c1ph3rj.insta.MainActivity.displayToast;
 import static com.c1ph3rj.insta.MainActivity.getTimeStamp;
-import static com.c1ph3rj.insta.MainActivity.userDetails;
+import static com.c1ph3rj.insta.MainActivity.userModelDetails;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,10 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.c1ph3rj.insta.R;
-import com.c1ph3rj.insta.common.model.User;
-import com.c1ph3rj.insta.common.model.UserListModel;
+import com.c1ph3rj.insta.common.model.FriendsModel;
+import com.c1ph3rj.insta.common.model.UserModel;
 import com.c1ph3rj.insta.dashboardPkg.DashboardScreen;
 import com.c1ph3rj.insta.databinding.ActivityLoginScreenBinding;
+import com.c1ph3rj.insta.utils.permissionsPkg.PermissionHandler;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -61,7 +63,9 @@ public class LoginScreen extends AppCompatActivity {
     DocumentSnapshot userDoc;
     GoogleSignInClient mGoogleSignInClient;
     boolean isNewUser;
+    PermissionHandler permissionHandler;
     boolean isAccountPrivate = false;
+    int loginMode;
     public ActivityResultLauncher<Intent> getResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -123,29 +127,69 @@ public class LoginScreen extends AppCompatActivity {
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
             fireStoreDb = FirebaseFirestore.getInstance();
 
+            try {
+                permissionHandler = new PermissionHandler(LoginScreen.this);
+
+                if (!permissionHandler.hasPermissions(ALL_PERMISSIONS)) {
+                    permissionHandler.requestPermissions(ALL_PERMISSIONS);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             loginBtn.setOnClickListener(onClickLoginBtn -> {
                 try {
-                    if (userNameLayout.getError() != null) {
-                        userNameLayout.setError(null);
+                    if (permissionHandler.hasPermissions(ALL_PERMISSIONS)) {
+                        try {
+                            if (userNameLayout.getError() != null) {
+                                userNameLayout.setError(null);
+                            }
+                            if (passwordLayout.getError() != null) {
+                                passwordLayout.setError(null);
+                            }
+                            String userName = Objects.requireNonNull(userNameField.getText()).toString().trim();
+                            String password = Objects.requireNonNull(passwordField.getText()).toString().trim();
+                            if (userName.isEmpty()) {
+                                userNameLayout.setError("Please Enter Email Address To Continue!");
+                                return;
+                            }
+                            if (!userName.matches("^[_A-Za-z\\d-]+(\\.[_A-Za-z\\d-]+)*@[A-Za-z\\d]+(\\.[A-Za-z\\d]+)*(\\.[A-Za-z]{2,})$")) {
+                                userNameLayout.setError("Please Enter a Valid Email Address!");
+                                return;
+                            }
+                            if (password.isEmpty()) {
+                                passwordLayout.setError("Please Enter Password To Continue!");
+                                return;
+                            }
+                            signInWithEmail(userName, password);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        loginMode = 1;
+                        permissionHandler.requestPermissions(ALL_PERMISSIONS);
                     }
-                    if (passwordLayout.getError() != null) {
-                        passwordLayout.setError(null);
-                    }
-                    String userName = Objects.requireNonNull(userNameField.getText()).toString().trim();
-                    String password = Objects.requireNonNull(passwordField.getText()).toString().trim();
-                    if (userName.isEmpty()) {
-                        userNameLayout.setError("Please Enter Email Address To Continue!");
-                        return;
-                    }
-                    if (!userName.matches("^[_A-Za-z\\d-]+(\\.[_A-Za-z\\d-]+)*@[A-Za-z\\d]+(\\.[A-Za-z\\d]+)*(\\.[A-Za-z]{2,})$")) {
-                        userNameLayout.setError("Please Enter a Valid Email Address!");
-                        return;
-                    }
-                    if (password.isEmpty()) {
-                        passwordLayout.setError("Please Enter Password To Continue!");
-                        return;
-                    }
-                    signInWithEmail(userName, password);
+
+                    permissionHandler.setPermissionResultListener(new PermissionHandler.PermissionResultListener() {
+                        @Override
+                        public void onPermissionGranted(String permission) {
+                            try {
+                                if (loginMode == 1) {
+                                    loginBtn.performClick();
+                                }else if(loginMode == 2){
+                                    loginWithGoogleBtn.performClick();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionDenied(String permission) {
+                            permissionHandler.showPermissionExplanationDialog();
+                        }
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -154,11 +198,15 @@ public class LoginScreen extends AppCompatActivity {
 
             loginWithGoogleBtn.setOnClickListener(onClickLoginWithGoogle -> {
                 try {
-                    if (loginProgress.getVisibility() == View.GONE) {
-                        loginProgress.setVisibility(View.VISIBLE);
-                        signInWithGoogleIntent();
-                    } else {
-                        displayToast("Please Wait..", LoginScreen.this);
+                    if(permissionHandler.hasPermissions(ALL_PERMISSIONS)){
+                        if (loginProgress.getVisibility() == View.GONE) {
+                            loginProgress.setVisibility(View.VISIBLE);
+                            signInWithGoogleIntent();
+                        } else {
+                            displayToast("Please Wait..", LoginScreen.this);
+                        }
+                    }else{
+                        permissionHandler.requestPermissions(ALL_PERMISSIONS);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -181,34 +229,35 @@ public class LoginScreen extends AppCompatActivity {
         }
     }
 
+
     private void saveUserDataToTheDb(FirebaseUser currentUser) {
         try {
-            userDetails = new User();
-            UserListModel userListDetails = new UserListModel();
-            userDetails.setUuid(currentUser.getUid());
+            userModelDetails = new UserModel();
+            FriendsModel userListDetails = new FriendsModel();
+            userModelDetails.setUuid(currentUser.getUid());
             userListDetails.setUuid(currentUser.getUid());
             if (isNewUser) {
                 userListDetails.setUserName(currentUser.getDisplayName());
                 userListDetails.setAccountPrivate(false);
                 userListDetails.setProfilePic((currentUser.getPhotoUrl() == null) ? "-" : String.valueOf(currentUser.getPhotoUrl()));
-                userDetails.setNewUser(true);
-                userDetails.setUserName((currentUser.getDisplayName() == null) ? "-" : currentUser.getDisplayName());
-                userDetails.setEmailId(currentUser.getEmail());
-                userDetails.setPhoneNumber((currentUser.getPhoneNumber() == null) ? "-" : currentUser.getPhoneNumber());
-                userDetails.setProfilePic((currentUser.getPhotoUrl() == null) ? "-" : String.valueOf(currentUser.getPhotoUrl()));
-                userDetails.setAccountPrivate(isAccountPrivate);
-                userDetails.setCurrentDeviceDetails(deviceInfo(this));
-                userDetails.setLoginAt(getTimeStamp());
-                userDetails.setNoOfFollowers(0);
-                userDetails.setNoOfFollowing(0);
-                userDetails.setNoOfPost(0);
-                userDetails.setAboutUser("");
+                userModelDetails.setNewUser(true);
+                userModelDetails.setUserName((currentUser.getDisplayName() == null) ? "-" : currentUser.getDisplayName());
+                userModelDetails.setEmailId(currentUser.getEmail());
+                userModelDetails.setPhoneNumber((currentUser.getPhoneNumber() == null) ? "-" : currentUser.getPhoneNumber());
+                userModelDetails.setProfilePic((currentUser.getPhotoUrl() == null) ? "-" : String.valueOf(currentUser.getPhotoUrl()));
+                userModelDetails.setAccountPrivate(isAccountPrivate);
+                userModelDetails.setCurrentDeviceDetails(deviceInfo(this));
+                userModelDetails.setLoginAt(getTimeStamp());
+                userModelDetails.setNoOfFollowers(0);
+                userModelDetails.setNoOfFollowing(0);
+                userModelDetails.setNoOfPost(0);
+                userModelDetails.setAboutUser("");
                 Task<Void> listOfUsersRef = fireStoreDb.collection("List_Of_Users")
                         .document(currentUser.getUid())
                         .set(userListDetails);
                 Task<Void> userRef = fireStoreDb.collection("Users")
                         .document(currentUser.getUid())
-                        .set(userDetails);
+                        .set(userModelDetails);
                 List<Task<?>> tasks = new ArrayList<>();
                 tasks.add(userRef);
                 tasks.add(listOfUsersRef);
@@ -229,7 +278,7 @@ public class LoginScreen extends AppCompatActivity {
                         task -> {
                             if (task.isSuccessful()) {
                                 userDoc = task.getResult();
-                                userDetails = userDoc.toObject(User.class);
+                                userModelDetails = userDoc.toObject(UserModel.class);
                                 startActivity(new Intent(LoginScreen.this, DashboardScreen.class));
                             } else {
                                 displayToast("Something went Wrong!", LoginScreen.this);
