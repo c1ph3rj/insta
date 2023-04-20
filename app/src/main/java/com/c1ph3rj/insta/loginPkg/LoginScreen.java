@@ -8,7 +8,9 @@ import static com.c1ph3rj.insta.MainActivity.userModelDetails;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -93,6 +95,7 @@ public class LoginScreen extends AppCompatActivity {
                         displayToast("Something went wrong!", this);
                     }
                 } else {
+                    loginProgress.setVisibility(View.GONE);
                     displayToast("Something went wrong!", this);
                 }
             });
@@ -131,7 +134,7 @@ public class LoginScreen extends AppCompatActivity {
                 permissionHandler = new PermissionHandler(LoginScreen.this);
 
                 if (!permissionHandler.hasPermissions(ALL_PERMISSIONS)) {
-                    permissionHandler.requestPermissions(ALL_PERMISSIONS);
+                    permissionHandler.requestPermissions(permissionHandler.getMissingPermissions(ALL_PERMISSIONS));
                 }
 
             } catch (Exception e) {
@@ -194,7 +197,6 @@ public class LoginScreen extends AppCompatActivity {
                     e.printStackTrace();
                 }
             });
-
 
             loginWithGoogleBtn.setOnClickListener(onClickLoginWithGoogle -> {
                 try {

@@ -3,6 +3,7 @@ package com.c1ph3rj.insta.dashboardPkg.dashboardFragments;
 import static com.c1ph3rj.insta.MainActivity.userModelDetails;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,8 @@ import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.reelsPkg.ReelsScreen;
 import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.searchPkg.SearchScreen;
 import com.c1ph3rj.insta.dashboardPkg.homePagePkg.adapter.BottomNavAdapter;
 import com.c1ph3rj.insta.databinding.FragmentDashbordBinding;
+import com.c1ph3rj.insta.pickResPkg.PickResourceScreen;
+import com.c1ph3rj.insta.pickResPkg.pickLocalResourcePkg.PickResScreen;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -122,6 +125,7 @@ public class Dashboard extends Fragment {
             postVideosBtn.setOnClickListener(onClickPostVideos ->{
                 try {
                     addPostDialog.dismiss();
+                    startActivity(new Intent(requireActivity(), PickResourceScreen.class));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -130,6 +134,7 @@ public class Dashboard extends Fragment {
             postPhotosBtn.setOnClickListener(onClickPostVideos ->{
                 try {
                     addPostDialog.dismiss();
+                    startActivity(new Intent(requireActivity(), PickResourceScreen.class));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

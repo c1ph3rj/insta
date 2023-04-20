@@ -68,23 +68,30 @@ public class MainActivity extends AppCompatActivity {
     public static final String[] LOCATION_PERMISSION = new String[]{
             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
     };
-    public static final String[] STORAGE_PERMISSION = new String[]{
-            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-    public static final String[] ALL_PERMISSIONS = new String[]{
-            android.Manifest.permission.ACCESS_COARSE_LOCATION,
-            android.Manifest.permission.ACCESS_FINE_LOCATION,
-            android.Manifest.permission.CAMERA,
-            android.Manifest.permission.READ_CONTACTS,
-            android.Manifest.permission.READ_EXTERNAL_STORAGE,
-            android.Manifest.permission.READ_PHONE_STATE,
-            android.Manifest.permission.READ_SMS,
-            android.Manifest.permission.RECEIVE_SMS,
-            android.Manifest.permission.RECEIVE_WAP_PUSH,
-            android.Manifest.permission.RECORD_AUDIO,
-            android.Manifest.permission.SEND_SMS,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
+    public static final String[] STORAGE_PERMISSION = (
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) ? new String[]{Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.READ_MEDIA_VIDEO} : new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
+
+    public static final String[] ALL_PERMISSIONS =
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) ?
+                    new String[]{
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                            android.Manifest.permission.ACCESS_FINE_LOCATION,
+                            android.Manifest.permission.CAMERA,
+                            Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.RECORD_AUDIO,
+                            android.Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.READ_MEDIA_IMAGES,
+                            Manifest.permission.READ_MEDIA_VIDEO}
+                    : new String[]{
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.CAMERA,
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.RECORD_AUDIO,
+                    android.Manifest.permission.READ_CONTACTS,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
 
 
     public static void displayToast(String toastMessage, Context context) {
