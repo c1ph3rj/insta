@@ -21,10 +21,13 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.c1ph3rj.insta.common.FileHelper;
+import com.c1ph3rj.insta.common.model.LocalFile;
 import com.c1ph3rj.insta.databinding.FragmentPickResScreenBinding;
 import com.c1ph3rj.insta.pickResPkg.PickResourceScreen;
 import com.c1ph3rj.insta.pickResPkg.pickLocalResourcePkg.adapter.LocalFilesViewAdapter;
@@ -43,7 +46,7 @@ public class PickResScreen extends Fragment {
     ImageView imagePreview;
     VideoView videoPreview;
     PickResourceScreen pickResourceScreen;
-    ArrayList<File> listOfFilesInDevice;
+    ArrayList<LocalFile> listOfFilesInDevice;
     ArrayList<Uri> listOfFilesUri;
     LocalFilesViewAdapter localFilesViewAdapter;
 
@@ -71,6 +74,7 @@ public class PickResScreen extends Fragment {
         init();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     void init() {
         try {
             PermissionHandler permissionHandler = new PermissionHandler(requireActivity());
@@ -126,77 +130,15 @@ public class PickResScreen extends Fragment {
                 e.printStackTrace();
             }
 
-            getImagesList();
+            listOfFilesInDevice.addAll(FileHelper.combineMediaFiles(FileHelper.groupMediaFilesByDirectory(requireContext())));
+
+
+
+            localFilesViewAdapter.notifyDataSetChanged();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private void getImagesList() {
-        new Thread(() -> {
-            try {
-                boolean isSdCardPresent = android.os.Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
-                if (isSdCardPresent) {
-                    final String[] columnCnt = {MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
-                    final String[] videosColumnCnt = {MediaStore.Video.Media.DATA, MediaStore.Video.Media._ID};
-                    final String orderByForImages = MediaStore.Images.Media._ID;
-                    final String orderByForVideos = MediaStore.Video.Media._ID;
-
-                    Cursor getImagesCursor = requireActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columnCnt, null, null, orderByForImages);
-                    Cursor getVideosCursor = requireActivity().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videosColumnCnt, null, null, orderByForVideos);
-                    MergeCursor getAllMediaFilesCursor = new MergeCursor(
-                            new Cursor[]{getImagesCursor, getVideosCursor}
-                    );
-
-                    getAllMediaFilesCursor.moveToFirst();
-                    listOfFilesInDevice.clear();
-                    while (!getAllMediaFilesCursor.isAfterLast()) {
-                        String path = getAllMediaFilesCursor.getString(getAllMediaFilesCursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                        int lastPoint = path.lastIndexOf(".");
-                        path = path.substring(0, lastPoint) + path.substring(lastPoint).toLowerCase();
-                        File resFile = new File
-                                (path);
-                        listOfFilesUri.add(FileProvider.getUriForFile(
-                                requireContext(),
-                                requireContext().getPackageName() + ".provider",
-                                resFile
-                        ));
-                        listOfFilesInDevice.add(resFile);
-                        getAllMediaFilesCursor.moveToNext();
-                    }
-
-                    getAllMediaFilesCursor.close();
-                    requireActivity().runOnUiThread(() -> {
-                        localFilesViewAdapter.notifyDataSetChanged();
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
-
-    public Uri getUriFromPath(Context context, File file) {
-        String filePath = file.getAbsolutePath();
-        Cursor cursor = context.getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Images.Media._ID},
-                MediaStore.Images.Media.DATA + "=? ",
-                new String[]{filePath}, null);
-        if (cursor != null && cursor.moveToFirst() && cursor.getCount() >= 0) {
-            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
-            cursor.close();
-            return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + id);
-        } else {
-            if (file.exists()) {
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.DATA, filePath);
-                return context.getContentResolver().insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            } else {
-                return null;
-            }
-        }
-    }
 }

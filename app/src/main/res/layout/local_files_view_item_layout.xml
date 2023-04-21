@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/videoItemLayout">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -25,14 +26,21 @@
             android:scaleType="center"
             android:contentDescription="@string/src"
             />
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
             app:tint="?attr/colorOnSurface"
-            android:src="@drawable/play_ic"
+            android:padding="6dp"
+            android:background="@color/instagramLightWhite"
+            android:id="@+id/durationOfTheVideo"
+            android:text="33:44"
+            android:fontFamily="@font/ibm_plex_mono_bold"
             android:contentDescription="@string/src"
             />
+
     </FrameLayout>
 
 </FrameLayout>
