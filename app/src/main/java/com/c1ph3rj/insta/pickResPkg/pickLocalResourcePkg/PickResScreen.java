@@ -10,6 +10,8 @@ import android.database.MergeCursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +51,7 @@ public class PickResScreen extends Fragment {
     ArrayList<LocalFile> listOfFilesInDevice;
     ArrayList<Uri> listOfFilesUri;
     LocalFilesViewAdapter localFilesViewAdapter;
+    RecyclerView.RecycledViewPool recycledViewPool = new RecyclerView.RecycledViewPool();
 
     public PickResScreen() {
         // Required empty public constructor
@@ -123,18 +126,25 @@ public class PickResScreen extends Fragment {
             });
 
             try {
-                localFilesViewAdapter = new LocalFilesViewAdapter(requireActivity(), listOfFilesInDevice, listOfFilesUri);
+                localFilesViewAdapter = new LocalFilesViewAdapter(requireContext(), listOfFilesInDevice);
                 localResView.setAdapter(localFilesViewAdapter);
+                localResView.setRecycledViewPool(recycledViewPool);
                 localResView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            listOfFilesInDevice.addAll(FileHelper.combineMediaFiles(FileHelper.groupMediaFilesByDirectory(requireContext())));
+            new Thread(()->{
+                listOfFilesInDevice.addAll(FileHelper.combineMediaFiles(FileHelper.groupMediaFilesByDirectory(requireContext())));
+                listOfFilesInDevice.addAll(FileHelper.combineMediaFiles(FileHelper.groupMediaFilesByDirectory(requireContext())));
+                listOfFilesInDevice.addAll(FileHelper.combineMediaFiles(FileHelper.groupMediaFilesByDirectory(requireContext())));
+                listOfFilesInDevice.addAll(FileHelper.combineMediaFiles(FileHelper.groupMediaFilesByDirectory(requireContext())));
 
 
-
-            localFilesViewAdapter.notifyDataSetChanged();
+                new Handler(Looper.getMainLooper()).post(()->{
+                    localFilesViewAdapter.notifyDataSetChanged();
+                });
+            }).start();
 
         } catch (Exception e) {
             e.printStackTrace();

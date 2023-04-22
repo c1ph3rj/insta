@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.c1ph3rj.insta.common.model.LocalFile;
 
@@ -24,6 +26,9 @@ import java.util.Objects;
 public class FileHelper {
 
     public static ArrayList<ArrayList<LocalFile>> groupMediaFilesByDirectory(Context context) {
+        new Thread(()->{
+
+        }).start();
         ArrayList<ArrayList<LocalFile>> mediaFilesByDir = new ArrayList<>();
 
         String[] projection = new String[] {
@@ -62,7 +67,7 @@ public class FileHelper {
                 }
 
                 LocalFile localFile = new LocalFile(mediaFile, duration, fileName, fileType);
-                tempMediaFilesByDir.get(mediaFile.getParentFile()).add(localFile);
+                Objects.requireNonNull(tempMediaFilesByDir.get(mediaFile.getParentFile())).add(localFile);
             }
 
             cursor.close();
@@ -76,45 +81,6 @@ public class FileHelper {
         return mediaFilesByDir;
     }
 
-
-    public static HashMap<File, List<File>> groupMediaFilesByDirectoryf(Context context) {
-        HashMap<File, List<File>> mediaFilesByDir = new HashMap<>();
-
-        String[] projection = new String[] {
-                MediaStore.Images.Media.DATA,
-                MediaStore.Video.Media.DATA
-        };
-
-        String selection = MediaStore.Images.Media.MIME_TYPE + "=? OR " +
-                MediaStore.Video.Media.MIME_TYPE + "=?";
-
-        String[] selectionArgs = new String[] {"image/jpeg", "video/mp4"};
-
-        Cursor cursor = context.getContentResolver().query(
-                MediaStore.Files.getContentUri("external"),
-                projection,
-                selection,
-                selectionArgs,
-                MediaStore.Images.Media.DATE_ADDED + " DESC");
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String filePath = cursor.getString(0);
-                File mediaFile = new File(filePath);
-
-                File parentDir = mediaFile.getParentFile();
-
-                if (!mediaFilesByDir.containsKey(parentDir)) {
-                    mediaFilesByDir.put(parentDir, new ArrayList<>());
-                }
-
-                Objects.requireNonNull(mediaFilesByDir.get(parentDir)).add(mediaFile);
-            }
-            cursor.close();
-        }
-
-        return mediaFilesByDir;
-    }
 
     public static ArrayList<LocalFile> combineMediaFiles(ArrayList<ArrayList<LocalFile>> mediaFilesByDir) {
         ArrayList<LocalFile> combinedFiles = new ArrayList<>();
