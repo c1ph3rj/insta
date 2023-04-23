@@ -10,6 +10,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.c1ph3rj.insta.common.model.LocalFile;
 
@@ -18,25 +19,35 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class FileHelper {
+    private static ArrayList<String> allTheMediaDirNames;
+
+    public static ArrayList<String> getAllTheMediaDirNames() {
+        return allTheMediaDirNames;
+    }
 
     public static ArrayList<ArrayList<LocalFile>> groupMediaFilesByDirectory(Context context) {
-        new Thread(()->{
-
+        new Thread(() -> {
+            // perform any background tasks here if needed
         }).start();
+
         ArrayList<ArrayList<LocalFile>> mediaFilesByDir = new ArrayList<>();
+        allTheMediaDirNames = new ArrayList<>(); // new ArrayList to store all folder names
 
         String[] projection = new String[] {
                 MediaStore.Images.Media.DATA,
                 MediaStore.Video.Media.DATA,
                 MediaStore.Video.Media.DURATION,
                 MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Files.FileColumns.MIME_TYPE
+                MediaStore.Files.FileColumns.MIME_TYPE,
+                MediaStore.Images.Media.DATE_MODIFIED, // add date modified to projection
+                MediaStore.Video.Media.DATE_MODIFIED // add date modified to projection
         };
 
         String selection = MediaStore.Images.Media.MIME_TYPE + "=? OR " +
@@ -61,25 +72,34 @@ public class FileHelper {
                 String duration = cursor.getString(2);
                 String fileName = cursor.getString(3);
                 String fileType = cursor.getString(4);
+                long lastModified = Math.max(cursor.getLong(5), cursor.getLong(6)); // get the maximum last modified value from both columns
 
-                if (!tempMediaFilesByDir.containsKey(mediaFile.getParentFile())) {
-                    tempMediaFilesByDir.put(mediaFile.getParentFile(), new ArrayList<>());
+                File parentDir = mediaFile.getParentFile();
+                if (!tempMediaFilesByDir.containsKey(parentDir)) {
+                    tempMediaFilesByDir.put(parentDir, new ArrayList<>());
+                    assert parentDir != null;
+                    allTheMediaDirNames.add(parentDir.getName()); // add folder name to new ArrayList
                 }
 
-                LocalFile localFile = new LocalFile(mediaFile, duration, fileName, fileType);
-                Objects.requireNonNull(tempMediaFilesByDir.get(mediaFile.getParentFile())).add(localFile);
+                if(mediaFile.exists() && mediaFile.isFile()){
+                    LocalFile localFile = new LocalFile(mediaFile, duration, fileName, fileType, lastModified);
+                    Objects.requireNonNull(tempMediaFilesByDir.get(parentDir)).add(localFile);
+                }
             }
 
             cursor.close();
 
             for (Map.Entry<File, ArrayList<LocalFile>> entry : tempMediaFilesByDir.entrySet()) {
                 ArrayList<LocalFile> localFiles = entry.getValue();
+                // sort the localFiles by last modified time in descending order (most recent first)
+                localFiles.sort((o1, o2) -> Long.compare(o2.getLastModified(), o1.getLastModified()));
                 mediaFilesByDir.add(localFiles);
             }
         }
 
         return mediaFilesByDir;
     }
+
 
 
     public static ArrayList<LocalFile> combineMediaFiles(ArrayList<ArrayList<LocalFile>> mediaFilesByDir) {
@@ -138,21 +158,14 @@ public class FileHelper {
         }
     }
 
-    public static Bitmap createVideoThumbnail(File videoFile) throws IOException {
-        Bitmap thumbnail = null;
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        try {
-            // Set the data source for the MediaMetadataRetriever to the video file
-            retriever.setDataSource(videoFile.getAbsolutePath());
-
-            // Get the thumbnail of the video at the first frame
-            thumbnail = retriever.getFrameAtTime(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            // Release the MediaMetadataRetriever
-            retriever.release();
+    public static boolean isVideoFile(File selectedFile) {
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(selectedFile.getName());
+        String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+        if (type != null) {
+            return !type.contains("image");
+        } else {
+            return false;
         }
-        return thumbnail;
     }
+
 }

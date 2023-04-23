@@ -66,6 +66,7 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
                 Glide.with(context)
                         .load(friendsModel.getProfilePic())
                         .placeholder(R.drawable.user_ic)
+                        .circleCrop()
                         .error(R.drawable.user_ic)
                         .circleCrop()
                         .into(holder.userProfilePicView);

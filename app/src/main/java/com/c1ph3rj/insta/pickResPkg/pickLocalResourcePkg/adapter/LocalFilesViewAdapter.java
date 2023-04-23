@@ -2,7 +2,7 @@ package com.c1ph3rj.insta.pickResPkg.pickLocalResourcePkg.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +12,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.c1ph3rj.insta.R;
 import com.c1ph3rj.insta.common.FileHelper;
 import com.c1ph3rj.insta.common.model.LocalFile;
+import com.c1ph3rj.insta.utils.glideSupportPkg.GlideApp;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,6 +34,8 @@ import java.util.ArrayList;
 public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAdapter.ViewHolder> {
     ArrayList<LocalFile> listOfFiles;
     Context context;
+
+    OnClickListener onClickListener;
 
     public LocalFilesViewAdapter(Context context, ArrayList<LocalFile> listOfFiles) {
         this.context = context;
@@ -51,10 +62,17 @@ public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAd
                 holder.videoItemLayout.setVisibility(View.GONE);
                 holder.photoItemView.setVisibility(View.VISIBLE);
 
+                RequestBuilder<Drawable> thumbnailRequest = GlideApp
+                        .with(context)
+                        .load(currentFile);
                 Glide.with(context)
                         .load(currentFile)
-                        .skipMemoryCache(false)
+                        .thumbnail(thumbnailRequest)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
                         .into(holder.photoItemView);
+
+
             } else if (fileType == 1) {
                 holder.videoItemLayout.setVisibility(View.VISIBLE);
                 holder.photoItemView.setVisibility(View.GONE);
@@ -64,10 +82,15 @@ public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAd
                 Glide.with(context)
                         .load(currentFile)
                         .skipMemoryCache(false)
+                        .centerCrop()
                         .into(holder.videoItemView);
             }
+            holder.itemView.setOnClickListener(onClickMedia -> {
+                if (onClickListener != null) {
+                    onClickListener.onClick(position, listOfFiles.get(position));
+                }
+            });
         }
-
     }
 
     @Override
@@ -94,13 +117,21 @@ public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAd
     int getMediaType(File selectedFile) {
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(selectedFile.getName());
         String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-        if(type != null){
+        if (type != null) {
             if (type.contains("image"))
                 return 0;
             else
                 return 1;
-        }else{
+        } else {
             return -1;
         }
+    }
+
+    public void setOnClickListenerOverride(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    public interface OnClickListener {
+        void onClick(int position, LocalFile localFile);
     }
 }

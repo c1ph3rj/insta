@@ -1,5 +1,6 @@
 package com.c1ph3rj.insta.dashboardPkg;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.CameraView;
 import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Dashboard;
 import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Directs;
 import com.c1ph3rj.insta.databinding.ActivityDashboardScreenBinding;
+import com.c1ph3rj.insta.pickResPkg.PickResourceScreen;
+import com.c1ph3rj.insta.pickResPkg.pickLocalResourcePkg.PickResScreen;
 
 import java.util.ArrayList;
 
@@ -28,6 +31,7 @@ public class DashboardScreen extends AppCompatActivity {
         setContentView(dashboardScreenBinding.getRoot());
         try {
             init();
+            startActivity(new Intent(DashboardScreen.this, PickResourceScreen.class));
         } catch (Exception e) {
             e.printStackTrace();
         }

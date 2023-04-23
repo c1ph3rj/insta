@@ -56,6 +56,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/galleryViewLayout"
         android:isScrollContainer="true">
 
         <LinearLayout
@@ -68,20 +69,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="350dp">
 
-                <ImageView
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/previewImagesView"
-                    android:src="@drawable/down_ic"
-                    app:tint="?attr/colorOnSurface"
-                    android:contentDescription="@string/src"/>
+                    android:id="@+id/imagePreviewLayout">
 
-                <VideoView
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/previewImagesView"
+                        android:contentDescription="@string/src"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="10dp"
+                        android:padding="3dp"
+                        android:id="@+id/zoomImageView"
+                        app:tint="?attr/colorOnSurface"
+                        android:layout_gravity="bottom"
+                        android:background="@color/instagramLightWhite"
+                        android:src="@drawable/full_view_ic"/>
+
+                </FrameLayout>
+
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
-                    android:id="@+id/previewVideoView"/>
+                    android:id="@+id/videoPreviewLayout"
+                    android:background="?attr/colorOnSurface">
 
+                    <VideoView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:id="@+id/previewVideoView"/>
+
+
+                </FrameLayout>
             </FrameLayout>
 
             <androidx.recyclerview.widget.RecyclerView

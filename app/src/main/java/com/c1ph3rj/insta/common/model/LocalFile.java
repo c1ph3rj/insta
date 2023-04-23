@@ -7,12 +7,21 @@ public class LocalFile {
     String duration;
     String fileName;
     String fileType;
+    long lastModified;
 
-    public LocalFile(File file, String duration, String fileName, String fileType) {
+    public LocalFile(File file, String duration, String fileName, String fileType, long lastModified) {
         this.file = file;
         this.duration = duration;
         this.fileName = fileName;
         this.fileType = fileType;
+    }
+
+    public long getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
     }
 
     public File getFile() {
