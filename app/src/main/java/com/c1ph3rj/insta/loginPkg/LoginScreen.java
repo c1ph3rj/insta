@@ -8,9 +8,7 @@ import static com.c1ph3rj.insta.MainActivity.userModelDetails;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -67,7 +65,6 @@ public class LoginScreen extends AppCompatActivity {
     boolean isNewUser;
     PermissionHandler permissionHandler;
     boolean isAccountPrivate = false;
-    int loginMode;
     public ActivityResultLauncher<Intent> getResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -99,6 +96,7 @@ public class LoginScreen extends AppCompatActivity {
                     displayToast("Something went wrong!", this);
                 }
             });
+    int loginMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +178,7 @@ public class LoginScreen extends AppCompatActivity {
                             try {
                                 if (loginMode == 1) {
                                     loginBtn.performClick();
-                                }else if(loginMode == 2){
+                                } else if (loginMode == 2) {
                                     loginWithGoogleBtn.performClick();
                                 }
                             } catch (Exception e) {
@@ -200,14 +198,14 @@ public class LoginScreen extends AppCompatActivity {
 
             loginWithGoogleBtn.setOnClickListener(onClickLoginWithGoogle -> {
                 try {
-                    if(permissionHandler.hasPermissions(ALL_PERMISSIONS)){
+                    if (permissionHandler.hasPermissions(ALL_PERMISSIONS)) {
                         if (loginProgress.getVisibility() == View.GONE) {
                             loginProgress.setVisibility(View.VISIBLE);
                             signInWithGoogleIntent();
                         } else {
                             displayToast("Please Wait..", LoginScreen.this);
                         }
-                    }else{
+                    } else {
                         permissionHandler.requestPermissions(ALL_PERMISSIONS);
                     }
                 } catch (Exception e) {

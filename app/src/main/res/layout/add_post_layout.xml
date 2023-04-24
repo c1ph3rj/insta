@@ -1,106 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:padding="10dp"
-    android:background="@drawable/top_curve_box_bg"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create"
-        android:textColor="?attr/colorOnSurface"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/ibm_plex_mono_bold"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/lightGreyText"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:id="@+id/postVideosBtn"
-        tools:ignore="UseCompoundDrawables">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="5dp"
-            android:padding="2dp"
-            android:src="@drawable/video_ic"
-            android:contentDescription="@string/cnt"
-            app:tint="?attr/colorOnSurface"/>
+        android:background="@drawable/top_curve_box_bg"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Videos"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/ibm_plex_mono_semibold"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/postPhotosBtn"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="5dp"
-            android:src="@drawable/post_ic_v"
-            android:contentDescription="@string/cnt"
-            app:tint="?attr/colorOnSurface"/>
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/ibm_plex_mono_bold"
+            android:gravity="center"
+            android:text="Create"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Post"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/ibm_plex_mono_semibold"/>
+            android:layout_height="0.5dp"
+            android:background="@color/lightGreyText" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/postStoryBtn"
-        android:layout_marginBottom="30dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="5dp"
-            android:src="@drawable/story_ic"
-            android:contentDescription="@string/cnt"
-            app:tint="?attr/colorOnSurface"/>
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/postVideosBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Story"
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/ibm_plex_mono_semibold"/>
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:contentDescription="@string/cnt"
+                android:padding="2dp"
+                android:src="@drawable/video_ic"
+                app:tint="?attr/colorOnSurface" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/ibm_plex_mono_semibold"
+                android:text="Videos" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/postPhotosBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:contentDescription="@string/cnt"
+                android:src="@drawable/post_ic_v"
+                app:tint="?attr/colorOnSurface" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/ibm_plex_mono_semibold"
+                android:text="Post" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/postStoryBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:contentDescription="@string/cnt"
+                android:src="@drawable/story_ic"
+                app:tint="?attr/colorOnSurface" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/ibm_plex_mono_semibold"
+                android:text="Story" />
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
 
 </LinearLayout>

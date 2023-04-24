@@ -50,20 +50,6 @@ TODO Tomorrow tasks.
 */
 
 public class MainActivity extends AppCompatActivity {
-    public static double latitude;
-    public static double longitude;
-    public static String deviceLocation;
-    public static UserModel userModelDetails;
-    public static ArrayList<FriendsModel> listOfFollowers;
-    public static ArrayList<FriendsModel> listOfFollowing;
-    public static ArrayList<String> listOfFollowersUuid;
-    public static ArrayList<String> listOfFollowingUuid;
-    public static ArrayList<PostModel> listOfPosts;
-
-    FirebaseUser currentUser;
-    FirebaseFirestore fireStoreDb;
-    DocumentReference documentReference;
-    DocumentSnapshot userDoc;
     public static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
     public static final String[] LOCATION_PERMISSION = new String[]{
             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
@@ -71,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String[] STORAGE_PERMISSION = (
             (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) ? new String[]{Manifest.permission.READ_MEDIA_IMAGES,
                     Manifest.permission.READ_MEDIA_VIDEO} : new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
-
     public static final String[] ALL_PERMISSIONS =
             (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) ?
                     new String[]{
@@ -92,7 +77,19 @@ public class MainActivity extends AppCompatActivity {
                     android.Manifest.permission.READ_CONTACTS,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             };
-
+    public static double latitude;
+    public static double longitude;
+    public static String deviceLocation;
+    public static UserModel userModelDetails;
+    public static ArrayList<FriendsModel> listOfFollowers;
+    public static ArrayList<FriendsModel> listOfFollowing;
+    public static ArrayList<String> listOfFollowersUuid;
+    public static ArrayList<String> listOfFollowingUuid;
+    public static ArrayList<PostModel> listOfPosts;
+    FirebaseUser currentUser;
+    FirebaseFirestore fireStoreDb;
+    DocumentReference documentReference;
+    DocumentSnapshot userDoc;
 
     public static void displayToast(String toastMessage, Context context) {
         Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();

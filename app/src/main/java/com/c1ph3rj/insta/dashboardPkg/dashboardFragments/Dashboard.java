@@ -26,7 +26,6 @@ import com.c1ph3rj.insta.dashboardPkg.bottomNavFragments.searchPkg.SearchScreen;
 import com.c1ph3rj.insta.dashboardPkg.homePagePkg.adapter.BottomNavAdapter;
 import com.c1ph3rj.insta.databinding.FragmentDashbordBinding;
 import com.c1ph3rj.insta.pickResPkg.PickResourceScreen;
-import com.c1ph3rj.insta.pickResPkg.pickLocalResourcePkg.PickResScreen;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -115,14 +114,14 @@ public class Dashboard extends Fragment {
         try {
             BottomSheetDialog addPostDialog = new BottomSheetDialog(requireActivity(), R.style.BottomSheetDialog);
             View view = LayoutInflater.from(requireActivity())
-                    .inflate(R.layout.add_post_layout,null);
+                    .inflate(R.layout.add_post_layout, null);
             addPostDialog.setContentView(view);
 
             LinearLayout postVideosBtn = view.findViewById(R.id.postVideosBtn);
             LinearLayout postPhotosBtn = view.findViewById(R.id.postPhotosBtn);
             LinearLayout postStoryBtn = view.findViewById(R.id.postStoryBtn);
 
-            postVideosBtn.setOnClickListener(onClickPostVideos ->{
+            postVideosBtn.setOnClickListener(onClickPostVideos -> {
                 try {
                     addPostDialog.dismiss();
                     startActivity(new Intent(requireActivity(), PickResourceScreen.class));
@@ -131,7 +130,7 @@ public class Dashboard extends Fragment {
                 }
             });
 
-            postPhotosBtn.setOnClickListener(onClickPostVideos ->{
+            postPhotosBtn.setOnClickListener(onClickPostVideos -> {
                 try {
                     addPostDialog.dismiss();
                     startActivity(new Intent(requireActivity(), PickResourceScreen.class));
@@ -140,7 +139,7 @@ public class Dashboard extends Fragment {
                 }
             });
 
-            postStoryBtn.setOnClickListener(onClickPostVideos ->{
+            postStoryBtn.setOnClickListener(onClickPostVideos -> {
                 try {
                     addPostDialog.dismiss();
                 } catch (Exception e) {

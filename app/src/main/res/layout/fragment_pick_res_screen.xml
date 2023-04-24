@@ -1,119 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".pickResPkg.pickLocalResourcePkg.PickResScreen">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="15dp">
 
         <ImageView
+            android:id="@+id/closeBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:padding="4dp"
-            android:id="@+id/closeBtn"
-            app:tint="?attr/colorOnSurface"
             android:contentDescription="@string/src"
-            android:src="@drawable/close_ic" />
+            android:padding="4dp"
+            android:src="@drawable/close_ic"
+            app:tint="?attr/colorOnSurface" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/picture_location"
-            android:fontFamily="@font/ibm_plex_mono_medium"
-            android:textSize="16sp"
             android:layout_weight="10"
-            android:id="@+id/chooseLocationTitle"
-            android:paddingStart="10dp"
-            android:paddingEnd="8dp"/>
+            android:gravity="center"
+            android:id="@+id/chooseLocationView"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/chooseLocationTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:fontFamily="@font/ibm_plex_mono_medium"
+                android:paddingStart="10dp"
+                android:paddingEnd="8dp"
+                android:text="@string/picture_location"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/chooseLocationIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@string/src"
+                android:src="@drawable/down_ic"
+                app:tint="?attr/colorOnSurface" />
+
+        </LinearLayout>
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            app:tint="?attr/colorOnSurface"
-            android:id="@+id/chooseLocationIcon"
-            android:contentDescription="@string/src"
-            android:src="@drawable/down_ic" />
-
-        <ImageView
+            android:id="@+id/nextBtn"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            app:tint="@color/instagramBlue"
-            android:id="@+id/nextBtn"
             android:layout_marginStart="10dp"
             android:contentDescription="@string/src"
-            android:src="@drawable/next_arrow_ic" />
+            android:src="@drawable/next_arrow_ic"
+            app:tint="@color/instagramBlue" />
 
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/galleryViewLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/galleryViewLayout"
         android:isScrollContainer="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="100"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="100">
 
             <FrameLayout
+                android:id="@+id/previewLayout"
                 android:layout_width="match_parent"
                 android:layout_height="350dp">
 
                 <FrameLayout
+                    android:id="@+id/imagePreviewLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imagePreviewLayout">
+                    android:layout_height="match_parent">
 
                     <ImageView
+                        android:id="@+id/previewImagesView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/previewImagesView"
-                        android:contentDescription="@string/src"/>
+                        android:contentDescription="@string/src" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
                         android:layout_margin="10dp"
-                        android:padding="3dp"
-                        android:id="@+id/zoomImageView"
-                        app:tint="?attr/colorOnSurface"
-                        android:layout_gravity="bottom"
-                        android:background="@color/instagramLightWhite"
-                        android:src="@drawable/full_view_ic"/>
+                        android:gravity="center_vertical"
+                        android:layout_gravity="bottom">
+
+                        <ImageView
+                            android:id="@+id/zoomImageView"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/instagramLightWhite"
+                            android:padding="3dp"
+                            android:src="@drawable/full_view_ic"
+                            app:tint="?attr/colorOnSurface" />
+
+                    </LinearLayout>
 
                 </FrameLayout>
 
                 <FrameLayout
+                    android:id="@+id/videoPreviewLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/videoPreviewLayout"
+                    android:visibility="gone"
                     android:background="?attr/colorOnSurface">
 
                     <VideoView
+                        android:id="@+id/previewVideoView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:id="@+id/previewVideoView"/>
+                        android:layout_gravity="center" />
 
 
                 </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="end|bottom">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/multiple_select_ic"
+                        app:iconSize="25dp"
+                        app:iconTint="@color/white"
+                        android:textAllCaps="false"
+                        android:layout_marginEnd="10dp"
+                        app:cornerRadius="25dp"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/lightGreyText"
+                        android:fontFamily="@font/ibm_plex_mono_semibold"
+                        android:id="@+id/multipleSelectFeature"
+                        android:text="Multiple Select"
+                        android:layout_gravity="center|end" />
+
+                </LinearLayout>
+
             </FrameLayout>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listOfResourcesView"
                 android:layout_width="match_parent"
                 android:layout_height="600dp"
-                android:isScrollContainer="true"
-                android:id="@+id/listOfResourcesView"/>
+                android:isScrollContainer="true" />
 
         </LinearLayout>
 

@@ -17,9 +17,8 @@ import java.util.List;
 
 public class PermissionHandler {
     private final Activity activity;
-    private PermissionResultListener listener;
-
     private final int requestCode = 1016;
+    private PermissionResultListener listener;
 
     public PermissionHandler(Activity activity) {
         this.activity = activity;
@@ -91,12 +90,6 @@ public class PermissionHandler {
         }
     }
 
-    public interface PermissionResultListener {
-        void onPermissionGranted(String permission);
-
-        void onPermissionDenied(String permission);
-    }
-
     public void showPermissionExplanationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage("We do not use your camera, location, phone, etc. without your consent. You can manage app permissions in the app's settings. Please allow required permissions to continue!")
@@ -107,6 +100,12 @@ public class PermissionHandler {
                     activity.startActivity(intent);
                 });
         builder.create().show();
+    }
+
+    public interface PermissionResultListener {
+        void onPermissionGranted(String permission);
+
+        void onPermissionDenied(String permission);
     }
 }
 

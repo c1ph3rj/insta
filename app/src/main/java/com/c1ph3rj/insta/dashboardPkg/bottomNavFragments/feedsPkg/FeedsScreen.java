@@ -81,17 +81,17 @@ public class FeedsScreen extends Fragment {
         }
     }
 
-    void checkForNewNotifications(){
+    void checkForNewNotifications() {
         try {
-            if(userModelDetails.isNewMessage()){
+            if (userModelDetails.isNewMessage()) {
                 directBtn.setBadgeValue(5);
-            }else{
+            } else {
                 directBtn.clearBadge();
             }
 
-            if(userModelDetails.isNewNotification()){
+            if (userModelDetails.isNewNotification()) {
                 notificationBtn.setBadgeValue(5);
-            }else{
+            } else {
                 notificationBtn.clearBadge();
             }
         } catch (Exception e) {

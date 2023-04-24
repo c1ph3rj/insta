@@ -100,11 +100,11 @@ public class ProfileScreen extends Fragment {
                     .limit(50);
             listOfUsers = new ArrayList<>();
 
-            int [] listOfTabIcons = new int[] {R.drawable.post_ic, R.drawable.video_ic_filled, R.drawable.tag_ic};
-            int [] listOfTabIds = new int[] {101, 102, 103};
+            int[] listOfTabIcons = new int[]{R.drawable.post_ic, R.drawable.video_ic_filled, R.drawable.tag_ic};
+            int[] listOfTabIds = new int[]{101, 102, 103};
 
             try {
-                for(int i = 0; i < listOfTabIcons.length; i++){
+                for (int i = 0; i < listOfTabIcons.length; i++) {
                     TabLayout.Tab tabItem = userContentTabs.newTab();
                     tabItem.setIcon(listOfTabIcons[i]);
                     tabItem.setId(listOfTabIds[i]);
@@ -133,9 +133,9 @@ public class ProfileScreen extends Fragment {
             }
 
             try {
-                if(userModelDetails.isAccountPrivate()){
+                if (userModelDetails.isAccountPrivate()) {
                     privateIcon.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     privateIcon.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
@@ -183,7 +183,7 @@ public class ProfileScreen extends Fragment {
                                 if (listOfUsers.size() != 0) {
                                     new Handler()
                                             .postDelayed(() -> {
-                                                if(listOfUsers.size() < 15){
+                                                if (listOfUsers.size() < 15) {
                                                     viewAllSuggestionsBtn.setVisibility(View.GONE);
                                                 }
                                                 listOfUsersAdapter.notifyDataSetChanged();

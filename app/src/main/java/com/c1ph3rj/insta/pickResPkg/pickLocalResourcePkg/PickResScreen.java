@@ -1,35 +1,36 @@
 package com.c1ph3rj.insta.pickResPkg.pickLocalResourcePkg;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.c1ph3rj.insta.MainActivity.STORAGE_PERMISSION;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.MergeCursor;
+import android.app.Dialog;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
+import android.transition.Fade;
+import android.transition.Transition;
+import android.transition.TransitionManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.FileProvider;
+import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
-import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,8 +43,8 @@ import com.c1ph3rj.insta.common.model.LocalFile;
 import com.c1ph3rj.insta.databinding.FragmentPickResScreenBinding;
 import com.c1ph3rj.insta.pickResPkg.PickResourceScreen;
 import com.c1ph3rj.insta.pickResPkg.pickLocalResourcePkg.adapter.LocalFilesViewAdapter;
-import com.c1ph3rj.insta.utils.glideSupportPkg.GlideApp;
 import com.c1ph3rj.insta.utils.permissionsPkg.PermissionHandler;
+import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,14 +57,17 @@ public class PickResScreen extends Fragment {
     ArrayList<LocalFile> listOfAllFiles;
     ArrayList<ArrayList<LocalFile>> listOfAllFilesByDir;
     ArrayList<String> listOfAllFoldersNames;
+    FrameLayout previewLayout;
+    boolean isMultipleSelectEnabled;
     ImageView closeBtn;
     RecyclerView localResView;
     FrameLayout imagePreviewLayout, videoPreviewLayout;
     ImageView nextBtn;
-    ImageView chooseLocationIcon;
+    LinearLayout chooseLocationView;
     TextView chooseLocationTitle;
     ImageView imagePreview;
     VideoView videoPreview;
+    MaterialButton multipleSelectBtn;
     PickResourceScreen pickResourceScreen;
     ArrayList<LocalFile> listOfFilesInDevice;
     ArrayList<Uri> listOfFilesUri;
@@ -101,8 +105,8 @@ public class PickResScreen extends Fragment {
             if (permissionHandler.hasPermissions(STORAGE_PERMISSION)) {
                 closeBtn = pickResScreenBinding.closeBtn;
                 nextBtn = pickResScreenBinding.nextBtn;
-                chooseLocationIcon = pickResScreenBinding.chooseLocationIcon;
                 chooseLocationTitle = pickResScreenBinding.chooseLocationTitle;
+                chooseLocationView = pickResScreenBinding.chooseLocationView;
                 localResView = pickResScreenBinding.listOfResourcesView;
                 imagePreview = pickResScreenBinding.previewImagesView;
                 videoPreview = pickResScreenBinding.previewVideoView;
@@ -110,10 +114,39 @@ public class PickResScreen extends Fragment {
                 videoPreviewLayout = pickResScreenBinding.videoPreviewLayout;
                 galleryViewLayout = pickResScreenBinding.galleryViewLayout;
                 cropImageView = pickResScreenBinding.zoomImageView;
+                previewLayout = pickResScreenBinding.previewLayout;
+                multipleSelectBtn = pickResScreenBinding.multipleSelectFeature;
+
                 videoPreviewLayout.setVisibility(View.GONE);
                 imagePreviewLayout.setVisibility(View.GONE);
                 listOfFilesInDevice = new ArrayList<>();
                 listOfFilesUri = new ArrayList<>();
+
+                chooseLocationView.setOnClickListener(onClickChooseLocation ->{
+                    Dialog dialog = new Dialog(requireContext());
+                    LayoutInflater inflater = (LayoutInflater)
+                            requireContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View popupView = inflater.inflate(R.layout.resource_location_layout, null);
+                    dialog.setContentView(popupView);
+                    dialog.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                    dialog.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireActivity(), R.drawable.transparent_bg));
+
+                    ListView listOfResourceNamesView = dialog.findViewById(R.id.listOfResourcesLocationView);
+                    if(listOfAllFoldersNames!= null){
+                        ArrayAdapter<String> listOfAllResNamesAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listOfAllFoldersNames);
+                        listOfResourceNamesView.setAdapter(listOfAllResNamesAdapter);
+                    }
+
+                    dialog.show();
+                });
+
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int screenWidth = displayMetrics.widthPixels;
+                int screenHeight = (screenWidth * 2) / 3;
+                ViewGroup.LayoutParams layoutParams = previewLayout.getLayoutParams();
+                layoutParams.height = screenHeight;
+                previewLayout.setLayoutParams(layoutParams);
 
                 closeBtn.setOnClickListener(onClickClose -> {
                     try {
@@ -124,27 +157,18 @@ public class PickResScreen extends Fragment {
                 });
 
                 isCropViewEnabled = false;
-                cropImageView.setOnClickListener(onClickCropView ->{
-                    if(!isCropViewEnabled){
+                cropImageView.setOnClickListener(onClickCropView -> {
+                    if (!isCropViewEnabled) {
                         imagePreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         isCropViewEnabled = true;
                         cropImageView.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.normal_view_ic));
-                    }else{
+                    } else {
                         imagePreview.setScaleType(ImageView.ScaleType.FIT_CENTER);
                         isCropViewEnabled = false;
                         cropImageView.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.full_view_ic));
                     }
                 });
 
-                chooseLocationTitle.setOnClickListener(onClickChooseLocation -> {
-                    try {
-                        // TODO Handle choose location
-                        System.out.println("Choose Location Clicked");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                chooseLocationIcon.setOnClickListener(onClickChooseLocation -> chooseLocationTitle.performClick());
             } else {
                 permissionHandler.requestPermissions(STORAGE_PERMISSION);
             }
@@ -167,15 +191,25 @@ public class PickResScreen extends Fragment {
                 localResView.setRecycledViewPool(recycledViewPool);
                 localResView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
                 localFilesViewAdapter.setOnClickListenerOverride((position, localFile) -> {
-                    if(localFile != null){
+                    if (localFile != null) {
                         previewFile(localFile.getFile());
                     }
+                });
+                multipleSelectBtn.setOnClickListener(onClickMultipleSelect ->{
+                    if(isMultipleSelectEnabled){
+                        multipleSelectBtn.setBackgroundColor(requireContext().getColor(R.color.lightGreyText));
+                    }else{
+                        multipleSelectBtn.setBackgroundColor(requireContext().getColor(R.color.instagramBlue));
+                    }
+                    isMultipleSelectEnabled = !isMultipleSelectEnabled;
+                    localFilesViewAdapter.setMultipleSelectEnabled(isMultipleSelectEnabled);
+                    localFilesViewAdapter.notifyDataSetChanged();
                 });
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            new Thread(()->{
+            new Thread(() -> {
                 listOfAllFiles = FileHelper.combineMediaFiles(FileHelper.groupMediaFilesByDirectory(requireContext()));
                 listOfFilesInDevice.addAll(listOfAllFiles);
                 listOfFilesInDevice.addAll(listOfAllFiles);
@@ -183,10 +217,10 @@ public class PickResScreen extends Fragment {
                 listOfFilesInDevice.addAll(listOfAllFiles);
 
 
-                new Handler(Looper.getMainLooper()).post(()-> {
+                new Handler(Looper.getMainLooper()).post(() -> {
                     localFilesViewAdapter.notifyDataSetChanged();
                     LocalFile firstFile = listOfAllFiles.get(0);
-                    if(firstFile != null){
+                    if (firstFile != null) {
                         previewFile(firstFile.getFile());
                     }
                 });
@@ -198,9 +232,9 @@ public class PickResScreen extends Fragment {
     }
 
     private void previewFile(File file) {
-        if(file != null){
-            if(FileHelper.isVideoFile(file)){
-                if(videoPreview.isPlaying()){
+        if (file != null) {
+            if (FileHelper.isVideoFile(file)) {
+                if (videoPreview.isPlaying()) {
                     videoPreview.stopPlayback();
                 }
                 imagePreviewLayout.setVisibility(View.GONE);
@@ -212,8 +246,8 @@ public class PickResScreen extends Fragment {
                     mp.start();
                 });
                 galleryViewLayout.smoothScrollTo(videoPreviewLayout.getScrollX(), videoPreviewLayout.getScrollY());
-            }else{
-                if(videoPreview.isPlaying()){
+            } else {
+                if (videoPreview.isPlaying()) {
                     videoPreview.stopPlayback();
                 }
                 videoPreviewLayout.setVisibility(View.GONE);
@@ -225,7 +259,7 @@ public class PickResScreen extends Fragment {
                         .load(file)
                         .thumbnail(thumbnailRequest)
                         .into(imagePreview);
-            galleryViewLayout.smoothScrollTo(imagePreviewLayout.getScrollX(), imagePreviewLayout.getScrollY());
+                galleryViewLayout.smoothScrollTo(imagePreviewLayout.getScrollX(), imagePreviewLayout.getScrollY());
             }
         }
     }

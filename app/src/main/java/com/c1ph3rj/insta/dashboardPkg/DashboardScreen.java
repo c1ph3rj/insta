@@ -13,7 +13,6 @@ import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Dashboard;
 import com.c1ph3rj.insta.dashboardPkg.dashboardFragments.Directs;
 import com.c1ph3rj.insta.databinding.ActivityDashboardScreenBinding;
 import com.c1ph3rj.insta.pickResPkg.PickResourceScreen;
-import com.c1ph3rj.insta.pickResPkg.pickLocalResourcePkg.PickResScreen;
 
 import java.util.ArrayList;
 

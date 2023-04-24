@@ -9,9 +9,10 @@ import java.util.ArrayList;
 
 public class PickResourceViewAdapter extends FragmentStateAdapter {
     ArrayList<Fragment> typesOfPickResList;
+
     public PickResourceViewAdapter(@NonNull FragmentActivity fragmentActivity, ArrayList<Fragment> typesOfPickResList) {
         super(fragmentActivity);
-        this.typesOfPickResList= typesOfPickResList;
+        this.typesOfPickResList = typesOfPickResList;
     }
 
     @NonNull

@@ -24,7 +24,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -174,7 +173,6 @@ public class ListOfUsersAdapter extends RecyclerView.Adapter<ListOfUsersAdapter.
             userProfilePicView = itemView.findViewById(R.id.userProfilePicView);
         }
     }
-
 
 
 }

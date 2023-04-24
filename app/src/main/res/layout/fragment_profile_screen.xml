@@ -20,8 +20,8 @@
             android:id="@+id/privateIcon"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:padding="2dp"
             android:contentDescription="@string/src"
+            android:padding="2dp"
             android:src="@drawable/lock_ic"
             app:tint="?attr/colorOnSurface" />
 
@@ -268,37 +268,22 @@
                 </LinearLayout>
 
                 <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/userContentsTabs"
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
                     android:background="@android:color/transparent"
-                    app:tabRippleColor="?attr/colorOnSurface"
+                    app:tabIconTint="?attr/colorOnSurface"
                     app:tabIndicatorColor="?attr/colorOnSurface"
                     app:tabIndicatorHeight="2dp"
-                    app:tabIconTint="?attr/colorOnSurface"
                     app:tabInlineLabel="false"
-                    android:id="@+id/userContentsTabs">
+                    app:tabRippleColor="?attr/colorOnSurface">
 
-                    <!--<com.google.android.material.tabs.TabItem
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:icon="@drawable/post_ic" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:icon="@drawable/video_ic_filled" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:icon="@drawable/tag_ic" />
--->
                 </com.google.android.material.tabs.TabLayout>
 
                 <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/userContentsView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/userContentsView"/>
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

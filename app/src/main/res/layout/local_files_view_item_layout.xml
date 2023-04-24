@@ -1,45 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    android:background="?attr/colorOnSurface"
     android:layout_margin="1dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="?attr/colorOnSurface">
 
     <ImageView
+        android:id="@+id/photoItemView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/photoItemView"
-        android:scaleType="centerCrop"
         android:contentDescription="@string/src"
-        />
+        android:scaleType="centerCrop" />
 
     <FrameLayout
+        android:id="@+id/videoItemLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/videoItemLayout">
+        android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/videoItemView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/videoItemView"
-            android:scaleType="center"
             android:contentDescription="@string/src"
-            />
+            android:scaleType="center" />
 
 
         <TextView
+            android:id="@+id/durationOfTheVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            app:tint="?attr/colorOnSurface"
-            android:padding="6dp"
             android:background="@color/instagramLightWhite"
-            android:id="@+id/durationOfTheVideo"
-            android:text="33:44"
-            android:fontFamily="@font/ibm_plex_mono_bold"
             android:contentDescription="@string/src"
-            />
+            android:fontFamily="@font/ibm_plex_mono_bold"
+            android:padding="6dp"
+            android:text="33:44"
+            app:tint="?attr/colorOnSurface" />
 
     </FrameLayout>
 

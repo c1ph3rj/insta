@@ -3,11 +3,12 @@ package com.c1ph3rj.insta.common.model;
 import java.io.File;
 
 public class LocalFile {
-    File file;
-    String duration;
-    String fileName;
-    String fileType;
-    long lastModified;
+    private File file;
+    private String duration;
+    private String fileName;
+    private String fileType;
+    private boolean isSelected = false;
+    private long lastModified;
 
     public LocalFile(File file, String duration, String fileName, String fileType, long lastModified) {
         this.file = file;
@@ -54,5 +55,14 @@ public class LocalFile {
 
     public void setFileType(String fileType) {
         this.fileType = fileType;
+    }
+
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

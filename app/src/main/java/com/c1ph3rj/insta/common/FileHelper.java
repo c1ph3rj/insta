@@ -3,13 +3,9 @@ package com.c1ph3rj.insta.common;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.c1ph3rj.insta.common.model.LocalFile;
@@ -19,9 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,7 +34,7 @@ public class FileHelper {
         ArrayList<ArrayList<LocalFile>> mediaFilesByDir = new ArrayList<>();
         allTheMediaDirNames = new ArrayList<>(); // new ArrayList to store all folder names
 
-        String[] projection = new String[] {
+        String[] projection = new String[]{
                 MediaStore.Images.Media.DATA,
                 MediaStore.Video.Media.DATA,
                 MediaStore.Video.Media.DURATION,
@@ -53,7 +47,7 @@ public class FileHelper {
         String selection = MediaStore.Images.Media.MIME_TYPE + "=? OR " +
                 MediaStore.Video.Media.MIME_TYPE + "=?";
 
-        String[] selectionArgs = new String[] {"image/jpeg", "video/mp4"};
+        String[] selectionArgs = new String[]{"image/jpeg", "video/mp4"};
 
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Files.getContentUri("external"),
@@ -81,7 +75,7 @@ public class FileHelper {
                     allTheMediaDirNames.add(parentDir.getName()); // add folder name to new ArrayList
                 }
 
-                if(mediaFile.exists() && mediaFile.isFile()){
+                if (mediaFile.exists() && mediaFile.isFile()) {
                     LocalFile localFile = new LocalFile(mediaFile, duration, fileName, fileType, lastModified);
                     Objects.requireNonNull(tempMediaFilesByDir.get(parentDir)).add(localFile);
                 }
@@ -99,7 +93,6 @@ public class FileHelper {
 
         return mediaFilesByDir;
     }
-
 
 
     public static ArrayList<LocalFile> combineMediaFiles(ArrayList<ArrayList<LocalFile>> mediaFilesByDir) {
