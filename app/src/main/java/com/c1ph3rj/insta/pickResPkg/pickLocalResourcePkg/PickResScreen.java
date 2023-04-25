@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -116,29 +117,12 @@ public class PickResScreen extends Fragment {
                 cropImageView = pickResScreenBinding.zoomImageView;
                 previewLayout = pickResScreenBinding.previewLayout;
                 multipleSelectBtn = pickResScreenBinding.multipleSelectFeature;
-
                 videoPreviewLayout.setVisibility(View.GONE);
                 imagePreviewLayout.setVisibility(View.GONE);
                 listOfFilesInDevice = new ArrayList<>();
                 listOfFilesUri = new ArrayList<>();
 
-                chooseLocationView.setOnClickListener(onClickChooseLocation ->{
-                    Dialog dialog = new Dialog(requireContext());
-                    LayoutInflater inflater = (LayoutInflater)
-                            requireContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    View popupView = inflater.inflate(R.layout.resource_location_layout, null);
-                    dialog.setContentView(popupView);
-                    dialog.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                    dialog.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireActivity(), R.drawable.transparent_bg));
-
-                    ListView listOfResourceNamesView = dialog.findViewById(R.id.listOfResourcesLocationView);
-                    if(listOfAllFoldersNames!= null){
-                        ArrayAdapter<String> listOfAllResNamesAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listOfAllFoldersNames);
-                        listOfResourceNamesView.setAdapter(listOfAllResNamesAdapter);
-                    }
-
-                    dialog.show();
-                });
+                chooseLocationTitle.setText("All Files");
 
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -201,6 +185,7 @@ public class PickResScreen extends Fragment {
                     }else{
                         multipleSelectBtn.setBackgroundColor(requireContext().getColor(R.color.instagramBlue));
                     }
+                    localFilesViewAdapter.setSelectedPositionsList();
                     isMultipleSelectEnabled = !isMultipleSelectEnabled;
                     localFilesViewAdapter.setMultipleSelectEnabled(isMultipleSelectEnabled);
                     localFilesViewAdapter.notifyDataSetChanged();
@@ -210,12 +195,9 @@ public class PickResScreen extends Fragment {
             }
 
             new Thread(() -> {
-                listOfAllFiles = FileHelper.combineMediaFiles(FileHelper.groupMediaFilesByDirectory(requireContext()));
+                listOfAllFilesByDir = FileHelper.groupMediaFilesByDirectory(requireContext());
+                listOfAllFiles = FileHelper.combineMediaFiles(listOfAllFilesByDir);
                 listOfFilesInDevice.addAll(listOfAllFiles);
-                listOfFilesInDevice.addAll(listOfAllFiles);
-                listOfFilesInDevice.addAll(listOfAllFiles);
-                listOfFilesInDevice.addAll(listOfAllFiles);
-
 
                 new Handler(Looper.getMainLooper()).post(() -> {
                     localFilesViewAdapter.notifyDataSetChanged();
@@ -225,6 +207,41 @@ public class PickResScreen extends Fragment {
                     }
                 });
             }).start();
+
+            chooseLocationView.setOnClickListener(onClickChooseLocation ->{
+                Dialog dialog = new Dialog(requireContext());
+                LayoutInflater inflater = (LayoutInflater)
+                        requireContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = inflater.inflate(R.layout.resource_location_layout, null);
+                dialog.setContentView(popupView);
+                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                dialog.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireActivity(), R.drawable.transparent_bg));
+
+                ListView listOfResourceNamesView = dialog.findViewById(R.id.listOfResourcesLocationView);
+                listOfAllFoldersNames = new ArrayList<>();
+                listOfAllFoldersNames.add("All Files");
+                listOfAllFoldersNames.addAll(FileHelper.getAllTheMediaDirNames());
+                ArrayAdapter<String> listOfAllResNamesAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listOfAllFoldersNames);
+                listOfResourceNamesView.setAdapter(listOfAllResNamesAdapter);
+                listOfResourceNamesView.setOnItemClickListener((parent, view, position, id) -> {
+                    chooseLocationTitle.setText(listOfAllFoldersNames.get(position));
+                    localFilesViewAdapter.setSelectedPositionsList();
+                    if(listOfAllFoldersNames.get(position).equals("All Files")){
+                        listOfFilesInDevice.clear();
+                        listOfFilesInDevice.addAll(listOfAllFiles);
+                        localFilesViewAdapter.notifyDataSetChanged();
+                    }else{
+                        listOfFilesInDevice.clear();
+                        listOfFilesInDevice.addAll(listOfAllFilesByDir.get(position - 1));
+                        localFilesViewAdapter.notifyDataSetChanged();
+                    }
+                    previewFile(listOfFilesInDevice.get(0).getFile());
+                    dialog.dismiss();
+                });
+
+                dialog.show();
+            });
+
 
         } catch (Exception e) {
             e.printStackTrace();

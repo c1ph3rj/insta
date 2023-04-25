@@ -2,7 +2,6 @@ package com.c1ph3rj.insta.pickResPkg.pickLocalResourcePkg.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,9 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +23,7 @@ import com.c1ph3rj.insta.R;
 import com.c1ph3rj.insta.common.FileHelper;
 import com.c1ph3rj.insta.common.model.LocalFile;
 import com.c1ph3rj.insta.utils.glideSupportPkg.GlideApp;
+import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,10 +33,31 @@ public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAd
     Context context;
     private boolean isMultipleSelectEnabled;
     OnClickListener onClickListener;
+    private final ArrayList<Integer> selectedPositionsList;
 
     public LocalFilesViewAdapter(Context context, ArrayList<LocalFile> listOfFiles) {
         this.context = context;
         this.listOfFiles = listOfFiles;
+        selectedPositionsList = new ArrayList<>();
+    }
+
+    public ArrayList<Integer> getSelectedPositionsList() {
+        return selectedPositionsList;
+    }
+
+    public void setSelectedPositionsList() {
+        try {
+            for (int selectPos : selectedPositionsList) {
+                try {
+                    listOfFiles.get(selectPos).setSelected(false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.selectedPositionsList.clear();
     }
 
     @NonNull
@@ -44,14 +67,42 @@ public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAd
         return new ViewHolder(view);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "NotifyDataSetChanged"})
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         File currentFile = listOfFiles.get(position).getFile();
+        LocalFile currentLocalFile = listOfFiles.get(position);
         holder.photoItemView.setVisibility(View.GONE);
         holder.videoItemLayout.setVisibility(View.GONE);
-        if(isMultipleSelectEnabled){
-            holder.itemView.setOnClickListener(onClickItem -> holder.itemView.setBackground(new ColorDrawable(context.getColor(R.color.instagramLightWhite))));
+        if (isMultipleSelectEnabled) {
+            if (currentLocalFile.isSelected()) {
+                holder.selectedLayout.setBackgroundColor(context.getColor(R.color.instagramLightWhite));
+                holder.selectBtn.setText(String.valueOf(selectedPositionsList.indexOf(position) + 1));
+                holder.selectBtn.setBackgroundColor(context.getColor(R.color.instagramBlue));
+            } else {
+                holder.selectBtn.setText("");
+                holder.selectedLayout.setBackgroundColor(context.getColor(android.R.color.transparent));
+                holder.selectBtn.setBackgroundColor(context.getColor(R.color.lightGreyText));
+            }
+            holder.selectBtn.setOnClickListener(onClickSelectItem -> {
+                if (currentLocalFile.isSelected()) {
+                    selectedPositionsList.remove((Integer) position);
+                    currentLocalFile.setSelected(false);
+                    this.notifyDataSetChanged();
+                } else {
+                    if (selectedPositionsList.size() < 10) {
+                        selectedPositionsList.add(position);
+                        currentLocalFile.setSelected(true);
+                        this.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(context, "The limit is 10 photos or videos", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            holder.selectedLayout.setOnClickListener(onClickSelectLayout -> holder.selectBtn.performClick());
+            holder.selectedLayout.setVisibility(View.VISIBLE);
+        } else {
+            holder.selectedLayout.setVisibility(View.GONE);
         }
         if (currentFile != null) {
             int fileType = getMediaType(currentFile);
@@ -74,7 +125,6 @@ public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAd
             } else if (fileType == 1) {
                 holder.videoItemLayout.setVisibility(View.VISIBLE);
                 holder.photoItemView.setVisibility(View.GONE);
-
                 holder.videoDuration.setText(FileHelper.getVideoDurationFormatted(context, currentFile));
 
                 Glide.with(context)
@@ -122,6 +172,8 @@ public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAd
         ImageView videoItemView;
         FrameLayout videoItemLayout;
         TextView videoDuration;
+        LinearLayout selectedLayout;
+        MaterialButton selectBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -130,6 +182,8 @@ public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAd
             photoItemView = itemView.findViewById(R.id.photoItemView);
             videoItemView = itemView.findViewById(R.id.videoItemView);
             videoDuration = itemView.findViewById(R.id.durationOfTheVideo);
+            selectedLayout = itemView.findViewById(R.id.selectedLayout);
+            selectBtn = itemView.findViewById(R.id.selectBtn);
         }
     }
 

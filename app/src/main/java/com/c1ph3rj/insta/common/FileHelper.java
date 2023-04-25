@@ -69,13 +69,11 @@ public class FileHelper {
                 long lastModified = Math.max(cursor.getLong(5), cursor.getLong(6)); // get the maximum last modified value from both columns
 
                 File parentDir = mediaFile.getParentFile();
-                if (!tempMediaFilesByDir.containsKey(parentDir)) {
-                    tempMediaFilesByDir.put(parentDir, new ArrayList<>());
-                    assert parentDir != null;
-                    allTheMediaDirNames.add(parentDir.getName()); // add folder name to new ArrayList
-                }
 
                 if (mediaFile.exists() && mediaFile.isFile()) {
+                    if (!tempMediaFilesByDir.containsKey(parentDir)) {
+                        tempMediaFilesByDir.put(parentDir, new ArrayList<>());
+                    }
                     LocalFile localFile = new LocalFile(mediaFile, duration, fileName, fileType, lastModified);
                     Objects.requireNonNull(tempMediaFilesByDir.get(parentDir)).add(localFile);
                 }
@@ -86,13 +84,37 @@ public class FileHelper {
             for (Map.Entry<File, ArrayList<LocalFile>> entry : tempMediaFilesByDir.entrySet()) {
                 ArrayList<LocalFile> localFiles = entry.getValue();
                 // sort the localFiles by last modified time in descending order (most recent first)
-                localFiles.sort((o1, o2) -> Long.compare(o2.getLastModified(), o1.getLastModified()));
+//                localFiles.sort((o1, o2) -> Long.compare(o2.getLastModified(), o1.getLastModified()));
                 mediaFilesByDir.add(localFiles);
             }
         }
 
+        allTheMediaDirNames.addAll(getAllDirectories(mediaFilesByDir));
+
         return mediaFilesByDir;
     }
+
+    public static ArrayList<String> getAllDirectories(ArrayList<ArrayList<LocalFile>> filesByDir) {
+        ArrayList<String> allDirectories = new ArrayList<>();
+
+        for (ArrayList<LocalFile> files : filesByDir) {
+            if (!files.isEmpty()) {
+                try {
+                    String dirPath = files.get(0).getFile().getParent();
+                    assert dirPath != null;
+                    String dirName = new File(dirPath).getName();
+                    if (!allDirectories.contains(dirName)) {
+                        allDirectories.add(dirName);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return allDirectories;
+    }
+
 
 
     public static ArrayList<LocalFile> combineMediaFiles(ArrayList<ArrayList<LocalFile>> mediaFilesByDir) {
