@@ -10,15 +10,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.transition.TransitionManager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -30,7 +26,6 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -179,10 +174,10 @@ public class PickResScreen extends Fragment {
                         previewFile(localFile.getFile());
                     }
                 });
-                multipleSelectBtn.setOnClickListener(onClickMultipleSelect ->{
-                    if(isMultipleSelectEnabled){
+                multipleSelectBtn.setOnClickListener(onClickMultipleSelect -> {
+                    if (isMultipleSelectEnabled) {
                         multipleSelectBtn.setBackgroundColor(requireContext().getColor(R.color.lightGreyText));
-                    }else{
+                    } else {
                         multipleSelectBtn.setBackgroundColor(requireContext().getColor(R.color.instagramBlue));
                     }
                     localFilesViewAdapter.setSelectedPositionsList();
@@ -208,7 +203,7 @@ public class PickResScreen extends Fragment {
                 });
             }).start();
 
-            chooseLocationView.setOnClickListener(onClickChooseLocation ->{
+            chooseLocationView.setOnClickListener(onClickChooseLocation -> {
                 Dialog dialog = new Dialog(requireContext());
                 LayoutInflater inflater = (LayoutInflater)
                         requireContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -226,11 +221,11 @@ public class PickResScreen extends Fragment {
                 listOfResourceNamesView.setOnItemClickListener((parent, view, position, id) -> {
                     chooseLocationTitle.setText(listOfAllFoldersNames.get(position));
                     localFilesViewAdapter.setSelectedPositionsList();
-                    if(listOfAllFoldersNames.get(position).equals("All Files")){
+                    if (listOfAllFoldersNames.get(position).equals("All Files")) {
                         listOfFilesInDevice.clear();
                         listOfFilesInDevice.addAll(listOfAllFiles);
                         localFilesViewAdapter.notifyDataSetChanged();
-                    }else{
+                    } else {
                         listOfFilesInDevice.clear();
                         listOfFilesInDevice.addAll(listOfAllFilesByDir.get(position - 1));
                         localFilesViewAdapter.notifyDataSetChanged();

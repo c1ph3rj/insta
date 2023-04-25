@@ -29,11 +29,11 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAdapter.ViewHolder> {
+    private final ArrayList<Integer> selectedPositionsList;
     ArrayList<LocalFile> listOfFiles;
     Context context;
-    private boolean isMultipleSelectEnabled;
     OnClickListener onClickListener;
-    private final ArrayList<Integer> selectedPositionsList;
+    private boolean isMultipleSelectEnabled;
 
     public LocalFilesViewAdapter(Context context, ArrayList<LocalFile> listOfFiles) {
         this.context = context;
@@ -163,6 +163,14 @@ public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAd
         this.onClickListener = onClickListener;
     }
 
+    public boolean isMultipleSelectEnabled() {
+        return isMultipleSelectEnabled;
+    }
+
+    public void setMultipleSelectEnabled(boolean multipleSelectEnabled) {
+        isMultipleSelectEnabled = multipleSelectEnabled;
+    }
+
     public interface OnClickListener {
         void onClick(int position, LocalFile localFile);
     }
@@ -185,13 +193,5 @@ public class LocalFilesViewAdapter extends RecyclerView.Adapter<LocalFilesViewAd
             selectedLayout = itemView.findViewById(R.id.selectedLayout);
             selectBtn = itemView.findViewById(R.id.selectBtn);
         }
-    }
-
-    public boolean isMultipleSelectEnabled() {
-        return isMultipleSelectEnabled;
-    }
-
-    public void setMultipleSelectEnabled(boolean multipleSelectEnabled) {
-        isMultipleSelectEnabled = multipleSelectEnabled;
     }
 }

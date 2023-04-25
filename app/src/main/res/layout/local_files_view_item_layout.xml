@@ -41,22 +41,22 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/selectedLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/selectedLayout"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/selectBtn"
             android:layout_width="30dp"
             android:layout_height="40dp"
             android:layout_gravity="end"
             android:layout_marginEnd="6dp"
-            android:id="@+id/selectBtn"
-            android:textColor="@color/white"
             android:backgroundTint="@color/lightGreyText"
             android:fontFamily="@font/ibm_plex_mono_medium"
             android:padding="0dp"
+            android:textColor="@color/white"
             app:cornerRadius="180dp" />
 
 

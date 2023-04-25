@@ -116,7 +116,6 @@ public class FileHelper {
     }
 
 
-
     public static ArrayList<LocalFile> combineMediaFiles(ArrayList<ArrayList<LocalFile>> mediaFilesByDir) {
         ArrayList<LocalFile> combinedFiles = new ArrayList<>();
 
