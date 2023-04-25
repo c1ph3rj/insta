@@ -117,7 +117,7 @@ public class PickResScreen extends Fragment {
                 listOfFilesInDevice = new ArrayList<>();
                 listOfFilesUri = new ArrayList<>();
 
-                chooseLocationTitle.setText("All Files");
+                chooseLocationTitle.setText(R.string.all_files);
 
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
